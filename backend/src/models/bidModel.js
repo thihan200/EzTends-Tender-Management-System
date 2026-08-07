@@ -1,6 +1,6 @@
 const db = require('../config/db');
 
-// Get tender details before submitting bid
+// Get tender details for bid submission
 const getTenderForBid = async (tenderId) => {
     const [rows] = await db.query(
         'SELECT * FROM tenders WHERE tender_id = ?',

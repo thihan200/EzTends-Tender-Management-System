@@ -13,7 +13,7 @@ const authMiddleware = (req, res, next) => {
             });
         }
 
-        // Token format should be: Bearer token_here
+        // Seperate the token from the "Bearer" prefix
         const token = authHeader.split(' ')[1];
 
         if (!token) {
