@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Submit Bid - EzTends</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .bid-page-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .bid-page-header h1 {
+            font-weight: 800;
+        }
+
+        .bid-wrapper {
+            margin-top: 28px;
+            padding-bottom: 70px;
+        }
+
+        .bid-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 16px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .bid-card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .bid-card-body {
+            padding: 24px;
+        }
+
+        .bid-title {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .category-label {
+            display: inline-block;
+            padding: 6px 11px;
+            color: var(--eztends-primary-dark);
+            background: var(--eztends-primary-light);
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 13px 0;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .summary-row:last-child {
+            border-bottom: 0;
+        }
+
+        .summary-label {
+            color: var(--eztends-muted);
+            font-weight: 700;
+        }
+
+        .summary-value {
+            color: var(--eztends-dark);
+            text-align: right;
+            font-weight: 700;
+        }
+
+        .bid-note {
+            padding: 16px;
+            color: #5d4a00;
+            background: #fff6d6;
+            border: 1px solid #f4dc85;
+            border-radius: 12px;
+        }
+
+        .amount-prefix {
+            position: relative;
+        }
+
+        .amount-prefix::before {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            z-index: 2;
+            content: "LKR";
+            color: var(--eztends-muted);
+            font-size: 0.82rem;
+            font-weight: 800;
+            transform: translateY(-50%);
+        }
+
+        .amount-prefix input {
+            padding-left: 58px;
+        }
+
+        .loading-area {
+            padding: 65px 20px;
+            color: var(--eztends-muted);
+            text-align: center;
+        }
+
+        @media (max-width: 575.98px) {
+            .summary-row {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .summary-value {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+<body data-page="tenders">
+
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="bid-page-header">
+            <div class="container">
+                <p class="mb-2">Supplier Bid Submission</p>
+                <h1>Submit Your Bid</h1>
+            </div>
+        </section>
+
+        <section class="container bid-wrapper">
+            <div id="pageMessage"></div>
+
+            <div id="loadingArea" class="bid-card loading-area">
+                <div class="spinner-border text-success mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+
+                <p class="mb-0">Loading tender information...</p>
+            </div>
+
+            <div id="bidContent" class="d-none">
+                <div class="row g-4">
+
+                    <div class="col-lg-5">
+                        <article class="bid-card">
+                            <div class="bid-card-header">
+                                <span class="category-label" id="tenderCategory">
+                                    General
+                                </span>
+
+                                <h2 class="bid-title h4 mt-3 mb-0" id="tenderTitle">
+                                    Tender
+                                </h2>
+                            </div>
+
+                            <div class="bid-card-body">
+                                <div class="summary-row">
+                                    <span class="summary-label">Tender ID</span>
+                                    <span class="summary-value" id="tenderId"></span>
+                                </div>
+
+                                <div class="summary-row">
+                                    <span class="summary-label">Budget</span>
+                                    <span class="summary-value" id="tenderBudget"></span>
+                                </div>
+
+                                <div class="summary-row">
+                                    <span class="summary-label">Closing Date</span>
+                                    <span class="summary-value" id="closingDate"></span>
+                                </div>
+
+                                <div class="summary-row">
+                                    <span class="summary-label">Time Remaining</span>
+                                    <span class="summary-value" id="remainingTime"></span>
+                                </div>
+
+                                <div class="summary-row">
+                                    <span class="summary-label">Status</span>
+                                    <span class="summary-value">
+                                        <span class="status-badge" id="tenderStatus"></span>
+                                    </span>
+                                </div>
+
+                                <a
+                                    class="btn btn-outline-eztends w-100 mt-4"
+                                    id="viewTenderButton"
+                                    href="#"
+                                >
+                                    View Full Tender
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="col-lg-7">
+                        <article class="bid-card">
+                            <div class="bid-card-header">
+                                <h2 class="bid-title h4 mb-1">Bid Information</h2>
+                                <p class="text-muted mb-0">
+                                    Enter the amount you propose for this tender.
+                                </p>
+                            </div>
+
+                            <div class="bid-card-body">
+                                <div class="bid-note mb-4">
+                                    Submit your final proposed amount carefully. You can
+                                    update or cancel the bid only while the tender remains open.
+                                </div>
+
+                                <form id="bidForm" novalidate>
+
+                                    <div class="mb-3">
+                                        <label for="amount" class="form-label">
+                                            Proposed Bid Amount
+                                        </label>
+
+                                        <div class="amount-prefix">
+                                            <input
+                                                type="number"
+                                                class="form-control"
+                                                id="amount"
+                                                min="0.01"
+                                                step="0.01"
+                                                placeholder="0.00"
+                                            >
+                                        </div>
+
+                                        <div class="invalid-feedback" id="amountError"></div>
+
+                                        <div class="form-text">
+                                            Enter a positive amount in Sri Lankan Rupees.
+                                        </div>
+                                    </div>
+
+                                    <div class="form-check mb-4">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            id="confirmBid"
+                                        >
+
+                                        <label class="form-check-label" for="confirmBid">
+                                            I confirm that the entered amount is correct.
+                                        </label>
+
+                                        <div class="invalid-feedback" id="confirmBidError"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="proposalFile" class="form-label">
+                                            Proposal Document
+                                        </label>
+
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="proposalFile"
+                                            accept=".pdf,.doc,.docx"
+                                        >
+
+                                        <div
+                                            class="invalid-feedback"
+                                            id="proposalFileError"
+                                        ></div>
+
+                                        <div class="form-text">
+                                            PDF, DOC or DOCX only. Maximum size: 5 MB.
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-eztends btn-lg w-100"
+                                        id="submitBidButton"
+                                    >
+                                        Submit Bid
+                                    </button>
+                                </form>
+                            </div>
+
+                        </article>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/submit-bid.js"></script>
+</body>
+</html>

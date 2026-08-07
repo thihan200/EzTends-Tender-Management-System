@@ -1,0 +1,193 @@
+/* Login and registration page styles */
+
+.auth-section {
+    min-height: calc(100vh - 76px);
+    padding: 60px 0;
+    background:
+        linear-gradient(rgba(245, 248, 247, 0.94), rgba(245, 248, 247, 0.94)),
+        radial-gradient(circle at top right, #cce9de, transparent 35%);
+}
+
+.auth-card {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid var(--eztends-border);
+    border-radius: 20px;
+    box-shadow: var(--eztends-shadow);
+}
+
+.auth-form-area {
+    padding: 42px;
+}
+
+.auth-side {
+    height: 100%;
+    padding: 42px;
+    color: #ffffff;
+    background:
+        radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.16), transparent 25%),
+        linear-gradient(145deg, var(--eztends-primary-dark), var(--eztends-primary));
+}
+
+.auth-side h2 {
+    font-weight: 800;
+}
+
+.auth-side p {
+    color: #d6ebe3;
+    line-height: 1.75;
+}
+
+.auth-feature {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.auth-feature-number {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--eztends-primary-dark);
+    background: #ffffff;
+    border-radius: 10px;
+    font-weight: 800;
+}
+
+.auth-title {
+    color: var(--eztends-dark);
+    font-weight: 800;
+}
+
+.auth-subtitle {
+    color: var(--eztends-muted);
+}
+
+.password-note {
+    color: var(--eztends-muted);
+    font-size: 0.82rem;
+}
+
+.role-fields {
+    display: none;
+    padding: 18px;
+    margin-top: 16px;
+    background: #f7faf9;
+    border: 1px solid var(--eztends-border);
+    border-radius: 12px;
+}
+
+.role-fields.show {
+    display: block;
+}
+
+.role-fields h3 {
+    color: var(--eztends-dark);
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.auth-link {
+    font-weight: 700;
+}
+
+@media (max-width: 991.98px) {
+    .auth-form-area,
+    .auth-side {
+        padding: 32px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .auth-section {
+        padding: 30px 0;
+    }
+
+    .auth-form-area,
+    .auth-side {
+        padding: 24px;
+    }
+}
+
+/* Password field and eye button */
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-input {
+    padding-right: 48px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    padding: 2px;
+    background: transparent;
+    border: 0;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.password-toggle img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    opacity: 0.72;
+}
+
+.password-toggle:hover img {
+    opacity: 1;
+}
+
+/* Password rule messages */
+
+.password-rules p {
+    margin-bottom: 4px;
+    color: var(--eztends-muted);
+    font-size: 0.8rem;
+}
+
+.password-rules p::before {
+    content: "•";
+    margin-right: 7px;
+}
+
+.password-rules .rule-valid {
+    color: #087f5b;
+}
+
+.password-rules .rule-valid::before {
+    content: "✓";
+}
+
+.password-rules .rule-invalid {
+    color: #c92a2a;
+}
+
+.password-rules .rule-invalid::before {
+    content: "✕";
+}
+
+/* Keep Bootstrap messages visible below custom password wrapper */
+
+.password-wrapper + .invalid-feedback {
+    display: none;
+}
+
+.password-wrapper:has(.is-invalid) + .invalid-feedback {
+    display: block;
+}
+
+/* Remove Bootstrap check and error icons from password fields */
+.password-input.is-valid,
+.password-input.is-invalid {
+    background-image: none !important;
+    padding-right: 50px !important;
+}

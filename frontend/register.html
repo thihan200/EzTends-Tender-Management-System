@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register - EzTends</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
+</head>
+
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="auth-section">
+            <div class="container">
+                <div class="auth-card">
+                    <div class="row g-0">
+
+                        <div class="col-lg-8">
+                            <div class="auth-form-area">
+                                <p class="text-success fw-bold mb-2">
+                                    Create your account
+                                </p>
+
+                                <h1 class="auth-title h2">Register with EzTends</h1>
+
+                                <p class="auth-subtitle mb-4">
+                                    Choose your account type and enter the required details.
+                                </p>
+
+                                <div id="registerMessage"></div>
+
+                                <form id="registerForm" novalidate>
+
+                                    <h2 class="h5 auth-title mb-3">Account Details</h2>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="name" class="form-label">
+                                                Full Name
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="name"
+                                                placeholder="Enter full name"
+                                            >
+
+                                            <div class="invalid-feedback" id="nameError"></div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label">
+                                                Email Address
+                                            </label>
+
+                                            <input
+                                                type="email"
+                                                class="form-control"
+                                                id="email"
+                                                placeholder="name@example.com"
+                                            >
+
+                                            <div class="invalid-feedback" id="emailError"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="password" class="form-label">
+                                                Password
+                                            </label>
+
+                                            <div class="password-wrapper">
+                                                <input
+                                                    type="password"
+                                                    class="form-control password-input"
+                                                    id="password"
+                                                    placeholder="Enter a strong password"
+                                                >
+
+                                                <button
+                                                    type="button"
+                                                    class="password-toggle"
+                                                    data-target="password"
+                                                    data-eye="passwordEye"
+                                                    aria-label="Show password"
+                                                >
+                                                    <img
+                                                        src="assets/images/eye-open.png"
+                                                        id="passwordEye"
+                                                        alt="Show password"
+                                                    >
+                                                </button>
+                                            </div>
+
+                                            <div class="invalid-feedback" id="passwordError"></div>
+
+                                            <div class="password-rules mt-2">
+                                                <p id="ruleLength">At least 8 characters</p>
+                                                <p id="ruleUppercase">At least one uppercase letter</p>
+                                                <p id="ruleNumber">At least one number</p>
+                                                <p id="ruleSymbol">At least one symbol</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="confirmPassword" class="form-label">
+                                                Confirm Password
+                                            </label>
+
+                                            <div class="password-wrapper">
+                                                <input
+                                                    type="password"
+                                                    class="form-control password-input"
+                                                    id="confirmPassword"
+                                                    placeholder="Enter password again"
+                                                >
+
+                                                <button
+                                                    type="button"
+                                                    class="password-toggle"
+                                                    data-target="confirmPassword"
+                                                    data-eye="confirmPasswordEye"
+                                                    aria-label="Show password"
+                                                >
+                                                    <img
+                                                        src="assets/images/eye-open.png"
+                                                        id="confirmPasswordEye"
+                                                        alt="Show password"
+                                                    >
+                                                </button>
+                                            </div>
+
+                                            <div
+                                                class="invalid-feedback"
+                                                id="confirmPasswordError"
+                                            ></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="type" class="form-label">
+                                            Account Type
+                                        </label>
+
+                                        <select class="form-select" id="type">
+                                            <option value="">Select account type</option>
+                                            <option value="SUPPLIER">Supplier</option>
+                                            <option value="TENDERING_AUTHORITY">
+                                                Tendering Authority
+                                            </option>
+                                        </select>
+
+                                        <div class="invalid-feedback" id="typeError"></div>
+                                    </div>
+
+                                    <div class="role-fields" id="supplierFields">
+                                        <h3>Supplier Details</h3>
+
+                                        <div class="mb-3">
+                                            <label for="company_name" class="form-label">
+                                                Company Name
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="company_name"
+                                                placeholder="Enter company name"
+                                            >
+
+                                            <div
+                                                class="invalid-feedback"
+                                                id="companyNameError"
+                                            ></div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="business_reg_no" class="form-label">
+                                                    Business Registration No
+                                                </label>
+
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="business_reg_no"
+                                                    placeholder="Example: BR001"
+                                                >
+
+                                                <div
+                                                    class="invalid-feedback"
+                                                    id="businessRegError"
+                                                ></div>
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="tax_id" class="form-label">
+                                                    Tax ID
+                                                </label>
+
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="tax_id"
+                                                    placeholder="Example: TX001"
+                                                >
+
+                                                <div
+                                                    class="invalid-feedback"
+                                                    id="taxIdError"
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="role-fields" id="authorityFields">
+                                        <h3>Tendering Authority Details</h3>
+
+                                        <div class="mb-3">
+                                            <label for="organization_name" class="form-label">
+                                                Organization Name
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="organization_name"
+                                                placeholder="Enter organization name"
+                                            >
+
+                                            <div
+                                                class="invalid-feedback"
+                                                id="organizationNameError"
+                                            ></div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="registration_no" class="form-label">
+                                                Registration No
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="registration_no"
+                                                placeholder="Enter registration number"
+                                            >
+
+                                            <div
+                                                class="invalid-feedback"
+                                                id="registrationNoError"
+                                            ></div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="address" class="form-label">
+                                                Address
+                                            </label>
+
+                                            <textarea
+                                                class="form-control"
+                                                id="address"
+                                                rows="3"
+                                                placeholder="Enter organization address"
+                                            ></textarea>
+
+                                            <div
+                                                class="invalid-feedback"
+                                                id="addressError"
+                                            ></div>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-eztends btn-lg w-100 mt-3"
+                                        id="registerButton"
+                                    >
+                                        Register
+                                    </button>
+                                </form>
+
+                                <p class="text-center mt-4 mb-0">
+                                    Already have an account?
+                                    <a class="auth-link" href="login.html">
+                                        Login here
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 d-none d-lg-block">
+                            <div class="auth-side">
+                                <span class="offline-label mb-4">
+                                    EzTends registration
+                                </span>
+
+                                <h2 class="mt-4">
+                                    Select the account that matches your role
+                                </h2>
+
+                                <div class="auth-feature mt-4">
+                                    <span class="auth-feature-number">S</span>
+                                    <div>
+                                        <strong>Supplier</strong>
+                                        <p class="mb-0">
+                                            Browse tenders, submit bids and track bid status.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="auth-feature">
+                                    <span class="auth-feature-number">TA</span>
+                                    <div>
+                                        <strong>Tendering Authority</strong>
+                                        <p class="mb-0">
+                                            Create tenders, review bids and select suppliers.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/register.js"></script>
+</body>
+</html>

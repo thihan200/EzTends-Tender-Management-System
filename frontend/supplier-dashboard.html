@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Supplier Dashboard - EzTends</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .dashboard-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .dashboard-header h1 {
+            font-weight: 800;
+        }
+
+        .dashboard-content {
+            margin-top: -28px;
+            padding-bottom: 70px;
+        }
+
+        .welcome-card,
+        .summary-card,
+        .quick-card,
+        .tender-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .welcome-card {
+            padding: 24px;
+        }
+
+        .welcome-card h2 {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .welcome-card p {
+            color: var(--eztends-muted);
+        }
+
+        .summary-card {
+            height: 100%;
+            padding: 22px;
+        }
+
+        .summary-card p {
+            margin-bottom: 5px;
+            color: var(--eztends-muted);
+            font-weight: 700;
+        }
+
+        .summary-card h2 {
+            margin: 0;
+            color: var(--eztends-dark);
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+
+        .quick-card {
+            height: 100%;
+            padding: 24px;
+            transition: transform 0.2s ease;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .quick-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            padding: 9px;
+            background: #ecf0f1;
+            border-radius: 13px;
+        }
+
+        .quick-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .quick-card h3 {
+            color: var(--eztends-dark);
+            font-size: 1.08rem;
+            font-weight: 800;
+        }
+
+        .quick-card p {
+            color: var(--eztends-muted);
+            line-height: 1.6;
+        }
+
+        .section-card {
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .section-card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .section-card-body {
+            padding: 24px;
+        }
+
+        .tender-card {
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .tender-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .tender-card-body {
+            padding: 20px;
+        }
+
+        .category-label {
+            display: inline-block;
+            padding: 5px 10px;
+            margin-bottom: 12px;
+            color: var(--eztends-primary-dark);
+            background: var(--eztends-primary-light);
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .tender-title {
+            min-height: 52px;
+            color: var(--eztends-dark);
+            font-size: 1.02rem;
+            font-weight: 800;
+            line-height: 1.45;
+        }
+
+        .tender-meta {
+            display: grid;
+            gap: 8px;
+            margin: 14px 0 18px;
+            color: var(--eztends-muted);
+            font-size: 0.88rem;
+        }
+
+        .tender-meta strong {
+            color: var(--eztends-dark);
+        }
+
+        .loading-area {
+            padding: 52px 20px;
+            color: var(--eztends-muted);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="dashboard-header">
+            <div class="container">
+                <p class="mb-2">Supplier Dashboard</p>
+                <h1 id="headerWelcome">Welcome</h1>
+                <p class="mb-0">
+                    Browse opportunities, manage your bids and upload documents.
+                </p>
+            </div>
+        </section>
+
+        <section class="container dashboard-content">
+            <div id="pageMessage"></div>
+
+            <div class="welcome-card mb-4">
+                <div class="row align-items-center g-3">
+                    <div class="col-lg-8">
+                        <h2 class="h4 mb-2" id="welcomeName">
+                            Welcome to EzTends
+                        </h2>
+
+                        <p class="mb-0" id="welcomeEmail"></p>
+                    </div>
+
+                    <div class="col-lg-4 text-lg-end">
+                        <a href="supplier-profile.html" class="btn btn-eztends">
+                            My Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Total Bids</p>
+                        <h2 id="totalBidCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Active Bids</p>
+                        <h2 id="activeBidCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Approved</p>
+                        <h2 id="approvedBidCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Rejected</p>
+                        <h2 id="rejectedBidCount">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <a href="tenders.html" class="text-reset">
+                        <article class="quick-card">
+                            <div class="quick-icon">
+                                <img
+                                    src="assets/images/browse-tender.png"
+                                    alt="Browse Tenders"
+                                >
+                            </div>
+                            <h3>Browse Tenders</h3>
+                            <p class="mb-0">
+                                Search open tender opportunities and view their details.
+                            </p>
+                        </article>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="my-bids.html" class="text-reset">
+                        <article class="quick-card">
+                            <div class="quick-icon">
+                                <img
+                                    src="assets/images/manage-bids.png"
+                                    alt="Manage Bids"
+                                >
+                            </div>
+                            <h3>Manage My Bids</h3>
+                            <p class="mb-0">
+                                View, update or cancel your submitted bids.
+                            </p>
+                        </article>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="upload-document.html" class="text-reset">
+                        <article class="quick-card">
+                            <div class="quick-icon">
+                                <img
+                                    src="assets/images/upload-documents.png"
+                                    alt="Upload Documents"
+                                >
+                            </div>
+                            <h3>Upload Documents</h3>
+                            <p class="mb-0">
+                                Upload proposal and supporting documents for tenders.
+                            </p>
+                        </article>
+                    </a>
+                </div>
+            </div>
+
+            <article class="section-card">
+                <div class="section-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div>
+                        <h2 class="section-title h4 mb-1">
+                            Latest Open Tenders
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Recently published opportunities available for bidding.
+                        </p>
+                    </div>
+
+                    <a href="tenders.html" class="btn btn-outline-eztends">
+                        View All Tenders
+                    </a>
+                </div>
+
+                <div class="section-card-body">
+                    <div class="row g-4" id="latestTenderList">
+                        <div class="col-12">
+                            <div class="loading-area">
+                                <div class="spinner-border text-success mb-3" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+
+                                <p class="mb-0">Loading open tenders...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/supplier-dashboard.js"></script>
+</body>
+</html>

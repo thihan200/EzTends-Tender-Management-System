@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Tender - EzTends</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .create-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .create-header h1 {
+            font-weight: 800;
+        }
+
+        .create-content {
+            margin-top: 28px;
+            padding-bottom: 70px;
+        }
+
+        .form-card,
+        .guide-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 16px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .form-card-header,
+        .guide-card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .form-card-body,
+        .guide-card-body {
+            padding: 24px;
+        }
+
+        .card-title {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .form-section {
+            padding-bottom: 22px;
+            margin-bottom: 22px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .form-section:last-child {
+            padding-bottom: 0;
+            margin-bottom: 0;
+            border-bottom: 0;
+        }
+
+        .form-section-title {
+            margin-bottom: 16px;
+            color: var(--eztends-dark);
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .guide-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .guide-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .guide-number {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #ffffff;
+            background: var(--eztends-primary);
+            border-radius: 10px;
+            font-weight: 800;
+        }
+
+        .guide-item h3 {
+            margin-bottom: 3px;
+            color: var(--eztends-dark);
+            font-size: 0.98rem;
+            font-weight: 800;
+        }
+
+        .guide-item p {
+            margin-bottom: 0;
+            color: var(--eztends-muted);
+            line-height: 1.55;
+        }
+
+        .status-note {
+            padding: 15px;
+            color: #4a4a4a;
+            background: #f7faf9;
+            border: 1px solid var(--eztends-border);
+            border-radius: 12px;
+        }
+
+        .status-note strong {
+            color: var(--eztends-dark);
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        @media (max-width: 991.98px) {
+            .guide-card {
+                margin-top: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="create-header">
+            <div class="container">
+                <p class="mb-2">Tendering Authority</p>
+                <h1>Create Tender</h1>
+                <p class="mb-0">
+                    Publish a new tender opportunity for registered Suppliers.
+                </p>
+            </div>
+        </section>
+
+        <section class="container create-content">
+            <div id="pageMessage"></div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <article class="form-card">
+                        <div class="form-card-header">
+                            <h2 class="card-title h4 mb-1">Tender Information</h2>
+                            <p class="text-muted mb-0">Enter the complete details of the new tender.</p>
+                        </div>
+
+                        <div class="form-card-body">
+                            <form id="createTenderForm" novalidate>
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Basic Details</h3>
+
+                                    <div class="mb-3">
+                                        <label for="title" class="form-label">Tender Title</label>
+                                        <input type="text" class="form-control" id="title" maxlength="150" placeholder="Example: Supply of Office Computers">
+                                        <div class="invalid-feedback" id="titleError"></div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="description" rows="6" maxlength="3000" placeholder="Describe the tender requirements, specifications and delivery expectations."></textarea>
+
+                                        <div class="d-flex justify-content-between mt-1">
+                                            <div class="invalid-feedback d-block" id="descriptionError"></div>
+                                            <small class="text-muted"><span id="descriptionCount">0</span>/3000</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-0">
+                                        <label for="categoryId" class="form-label">Category</label>
+                                        <select class="form-select" id="categoryId">
+                                            <option value="">Loading categories...</option>
+                                        </select>
+                                        <div class="invalid-feedback" id="categoryError"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Budget and Dates</h3>
+
+                                    <div class="mb-3">
+                                        <label for="budget" class="form-label">Estimated Budget (LKR)</label>
+                                        <input type="number" class="form-control" id="budget" min="1" step="0.01" placeholder="2500000">
+                                        <div class="invalid-feedback" id="budgetError"></div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="openDate" class="form-label">Open Date</label>
+                                            <input type="date" class="form-control" id="openDate">
+                                            <div class="invalid-feedback" id="openDateError"></div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="closeDate" class="form-label">Closing Date</label>
+                                            <input type="date" class="form-control" id="closeDate">
+                                            <div class="invalid-feedback" id="closeDateError"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Publication Status</h3>
+
+                                    <div class="mb-3">
+                                        <label for="status" class="form-label">Tender Status</label>
+                                        <select class="form-select" id="status">
+                                            <option value="DRAFT">Save as Draft</option>
+                                            <option value="OPEN">Publish as Open</option>
+                                        </select>
+                                        <div class="invalid-feedback" id="statusError"></div>
+                                    </div>
+
+                                    <div class="status-note">
+                                        <strong>Draft:</strong> The tender is saved but not visible to Suppliers.<br>
+                                        <strong>Open:</strong> The tender is published and Suppliers can submit bids.
+                                    </div>
+                                </div>
+
+                                <div class="button-row">
+                                    <button type="submit" class="btn btn-eztends" id="createTenderButton">Create Tender</button>
+                                    <a href="authority-dashboard.html" class="btn btn-outline-secondary">Cancel</a>
+                                </div>
+                            </form>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-lg-4">
+                    <article class="guide-card">
+                        <div class="guide-card-header">
+                            <h2 class="card-title h5 mb-0">Tender Guidelines</h2>
+                        </div>
+
+                        <div class="guide-card-body">
+                            <div class="guide-item">
+                                <span class="guide-number">1</span>
+                                <div>
+                                    <h3>Use a clear title</h3>
+                                    <p>The title should briefly explain what is being purchased or requested.</p>
+                                </div>
+                            </div>
+
+                            <div class="guide-item">
+                                <span class="guide-number">2</span>
+                                <div>
+                                    <h3>Add complete requirements</h3>
+                                    <p>Include specifications, quantities, delivery expectations and conditions.</p>
+                                </div>
+                            </div>
+
+                            <div class="guide-item">
+                                <span class="guide-number">3</span>
+                                <div>
+                                    <h3>Check the dates</h3>
+                                    <p>The closing date must be after the open date.</p>
+                                </div>
+                            </div>
+
+                            <div class="guide-item">
+                                <span class="guide-number">4</span>
+                                <div>
+                                    <h3>Review before publishing</h3>
+                                    <p>Save as Draft when the tender details are not ready for Supplier bidding.</p>
+                                </div>
+                            </div>
+
+                            <a href="my-tenders.html" class="btn btn-outline-eztends w-100 mt-3">View My Tenders</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/create-tender.js"></script>
+</body>
+</html>

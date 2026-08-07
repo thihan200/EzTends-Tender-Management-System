@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Authority Dashboard - EzTends</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .dashboard-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .dashboard-header h1 {
+            font-weight: 800;
+        }
+
+        .dashboard-content {
+            margin-top: -28px;
+            padding-bottom: 70px;
+        }
+
+        .welcome-card,
+        .summary-card,
+        .quick-card,
+        .section-card,
+        .tender-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .welcome-card {
+            padding: 24px;
+        }
+
+        .welcome-card h2 {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .welcome-card p {
+            color: var(--eztends-muted);
+        }
+
+        .summary-card {
+            height: 100%;
+            padding: 22px;
+        }
+
+        .summary-card p {
+            margin-bottom: 5px;
+            color: var(--eztends-muted);
+            font-weight: 700;
+        }
+
+        .summary-card h2 {
+            margin: 0;
+            color: var(--eztends-dark);
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+
+        .quick-card {
+            height: 100%;
+            padding: 24px;
+            transition: transform 0.2s ease;
+        }
+
+        .quick-card:hover,
+        .tender-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .quick-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            padding: 9px;
+            background: #ecf0f1;
+            border-radius: 13px;
+        }
+
+        .quick-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .quick-card h3 {
+            color: var(--eztends-dark);
+            font-size: 1.08rem;
+            font-weight: 800;
+        }
+
+        .quick-card p {
+            color: var(--eztends-muted);
+            line-height: 1.6;
+        }
+
+        .section-card {
+            overflow: hidden;
+        }
+
+        .section-card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .section-card-body {
+            padding: 24px;
+        }
+
+        .tender-card {
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .tender-card-body {
+            padding: 20px;
+        }
+
+        .status-label {
+            display: inline-block;
+            padding: 5px 10px;
+            margin-bottom: 12px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .status-open {
+            color: #087f5b;
+            background: #dff5eb;
+        }
+
+        .status-closed {
+            color: #8a5a00;
+            background: #fff3cd;
+        }
+
+        .status-awarded {
+            color: #1553a0;
+            background: #e7f0ff;
+        }
+
+        .status-cancelled {
+            color: #b02a37;
+            background: #fde8ea;
+        }
+
+        .status-draft {
+            color: #5f6368;
+            background: #eeeeee;
+        }
+
+        .tender-title {
+            min-height: 52px;
+            color: var(--eztends-dark);
+            font-size: 1.02rem;
+            font-weight: 800;
+            line-height: 1.45;
+        }
+
+        .tender-meta {
+            display: grid;
+            gap: 8px;
+            margin: 14px 0 18px;
+            color: var(--eztends-muted);
+            font-size: 0.88rem;
+        }
+
+        .tender-meta strong {
+            color: var(--eztends-dark);
+        }
+
+        .loading-area {
+            padding: 52px 20px;
+            color: var(--eztends-muted);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="dashboard-header">
+            <div class="container">
+                <p class="mb-2">Tendering Authority Dashboard</p>
+                <h1 id="headerWelcome">Welcome</h1>
+                <p class="mb-0">
+                    Create tenders, review bids and manage supplier selection.
+                </p>
+            </div>
+        </section>
+
+        <section class="container dashboard-content">
+            <div id="pageMessage"></div>
+
+            <div class="welcome-card mb-4">
+                <div class="row align-items-center g-3">
+                    <div class="col-lg-8">
+                        <h2 class="h4 mb-2" id="welcomeName">
+                            Welcome to EzTends
+                        </h2>
+
+                        <p class="mb-0" id="welcomeEmail"></p>
+                    </div>
+
+                    <div class="col-lg-4 text-lg-end">
+                        <a href="authority-profile.html" class="btn btn-eztends">
+                            My Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg">
+                    <div class="summary-card">
+                        <p>Total Tenders</p>
+                        <h2 id="totalTenderCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg">
+                    <div class="summary-card">
+                        <p>Open</p>
+                        <h2 id="openTenderCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg">
+                    <div class="summary-card">
+                        <p>Closed</p>
+                        <h2 id="closedTenderCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg">
+                    <div class="summary-card">
+                        <p>Awarded</p>
+                        <h2 id="awardedTenderCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg">
+                    <div class="summary-card">
+                        <p>Bids Received</p>
+                        <h2 id="totalBidCount">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <a href="create-tender.html" class="text-reset">
+                        <article class="quick-card">
+                            <div class="quick-icon">
+                                <img
+                                    src="assets/images/create-tender.png"
+                                    alt="Create Tender"
+                                >
+                            </div>
+                            <h3>Create Tender</h3>
+                            <p class="mb-0">
+                                Publish a new tender opportunity for Suppliers.
+                            </p>
+                        </article>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="my-tenders.html" class="text-reset">
+                        <article class="quick-card">
+                            <div class="quick-icon">
+                                <img
+                                    src="assets/images/manage-tenders.png"
+                                    alt="Manage Tenders"
+                                >
+                            </div>
+                            <h3>Manage My Tenders</h3>
+                            <p class="mb-0">
+                                View, edit, close or cancel your tenders.
+                            </p>
+                        </article>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="my-tenders.html" class="text-reset">
+                        <article class="quick-card">
+                            <div class="quick-icon">
+                                <img
+                                    src="assets/images/review-bids.png"
+                                    alt="Review Bids"
+                                >
+                            </div>
+                            <h3>Review Received Bids</h3>
+                            <p class="mb-0">
+                                Open a tender and review the submitted Supplier bids.
+                            </p>
+                        </article>
+                    </a>
+                </div>
+            </div>
+
+            <article class="section-card">
+                <div class="section-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div>
+                        <h2 class="h4 mb-1">
+                            Recent Tenders
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Recently created tenders under your Authority account.
+                        </p>
+                    </div>
+
+                    <a href="my-tenders.html" class="btn btn-outline-eztends">
+                        View All Tenders
+                    </a>
+                </div>
+
+                <div class="section-card-body">
+                    <div class="row g-4" id="recentTenderList">
+                        <div class="col-12">
+                            <div class="loading-area">
+                                <div class="spinner-border text-success mb-3" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+
+                                <p class="mb-0">Loading your tenders...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/authority-dashboard.js"></script>
+</body>
+</html>

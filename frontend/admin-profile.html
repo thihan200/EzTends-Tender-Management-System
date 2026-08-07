@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Profile - EzTends</title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="assets/images/logo.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/bootstrap/css/bootstrap.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/style.css"
+    >
+
+    <style>
+        .page-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .page-header h1 {
+            font-weight: 800;
+        }
+
+        .page-content-area {
+            margin-top: 28px;
+            padding-bottom: 70px;
+        }
+
+        .profile-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .profile-card-header {
+            padding: 22px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .profile-card-body {
+            padding: 22px;
+        }
+
+        .profile-summary {
+            padding: 24px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #087f5b, #0aa174);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .profile-avatar {
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            color: #087f5b;
+            background: #ffffff;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .profile-summary h2 {
+            font-weight: 800;
+        }
+
+        .profile-summary p {
+            margin-bottom: 5px;
+        }
+
+        .account-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 7px 12px;
+            color: #087f5b;
+            background: #ffffff;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .section-title {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .form-text {
+            color: var(--eztends-muted);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper .form-control {
+            padding-right: 48px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            transform: translateY(-50%);
+            background: transparent;
+            border: 0;
+        }
+
+        .password-toggle img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+        }
+
+        .loading-area {
+            padding: 45px 20px;
+            color: var(--eztends-muted);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="page-header">
+            <div class="container">
+                <p class="mb-2">System Administration</p>
+
+                <h1>Admin Profile</h1>
+
+                <p class="mb-0">
+                    View and update your Administrator account details.
+                </p>
+            </div>
+        </section>
+
+        <section class="container page-content-area">
+            <div id="pageMessage"></div>
+
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <aside class="profile-summary">
+                        <div class="profile-avatar" id="profileInitial">
+                            A
+                        </div>
+
+                        <h2 class="h4 mb-2" id="profileName">
+                            Administrator
+                        </h2>
+
+                        <p id="profileEmail">
+                            Loading email...
+                        </p>
+
+                        <p id="profileLevel">
+                            Admin Level: Not available
+                        </p>
+
+                        <span class="account-badge">
+                            ADMINISTRATOR
+                        </span>
+
+                        <div class="mt-4">
+                            <a
+                                href="admin-dashboard.html"
+                                class="btn btn-light w-100"
+                            >
+                                Back to Dashboard
+                            </a>
+                        </div>
+                    </aside>
+                </div>
+
+                <div class="col-lg-8">
+                    <article class="profile-card mb-4">
+                        <div class="profile-card-header">
+                            <h2 class="h4 section-title mb-1">
+                                Profile Information
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Update your name and email address.
+                            </p>
+                        </div>
+
+                        <div class="profile-card-body">
+                            <form id="profileForm">
+                                <div class="mb-3">
+                                    <label
+                                        for="adminName"
+                                        class="form-label"
+                                    >
+                                        Full Name
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="adminName"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="mb-3">
+                                    <label
+                                        for="adminEmail"
+                                        class="form-label"
+                                    >
+                                        Email Address
+                                    </label>
+
+                                    <input
+                                        type="email"
+                                        class="form-control"
+                                        id="adminEmail"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="mb-3">
+                                    <label
+                                        for="adminLevel"
+                                        class="form-label"
+                                    >
+                                        Admin Level
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="adminLevel"
+                                        readonly
+                                    >
+
+                                    <div class="form-text">
+                                        Admin level cannot be changed from this page.
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-eztends"
+                                    id="saveProfileButton"
+                                >
+                                    Save Profile
+                                </button>
+                            </form>
+                        </div>
+                    </article>
+
+                    <article class="profile-card">
+                        <div class="profile-card-header">
+                            <h2 class="h4 section-title mb-1">
+                                Change Password
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Enter your current password before creating a new password.
+                            </p>
+                        </div>
+
+                        <div class="profile-card-body">
+                            <form id="passwordForm">
+                                <div class="mb-3">
+                                    <label
+                                        for="currentPassword"
+                                        class="form-label"
+                                    >
+                                        Current Password
+                                    </label>
+
+                                    <div class="password-wrapper">
+                                        <input
+                                            type="password"
+                                            class="form-control"
+                                            id="currentPassword"
+                                            autocomplete="current-password"
+                                            required
+                                        >
+
+                                        <button
+                                            type="button"
+                                            class="password-toggle"
+                                            data-target="currentPassword"
+                                        >
+                                            <img
+                                                src="assets/images/eye-open.png"
+                                                alt="Show password"
+                                            >
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label
+                                        for="newPassword"
+                                        class="form-label"
+                                    >
+                                        New Password
+                                    </label>
+
+                                    <div class="password-wrapper">
+                                        <input
+                                            type="password"
+                                            class="form-control"
+                                            id="newPassword"
+                                            autocomplete="new-password"
+                                            minlength="8"
+                                            required
+                                        >
+
+                                        <button
+                                            type="button"
+                                            class="password-toggle"
+                                            data-target="newPassword"
+                                        >
+                                            <img
+                                                src="assets/images/eye-open.png"
+                                                alt="Show password"
+                                            >
+                                        </button>
+                                    </div>
+
+                                    <div class="form-text">
+                                        Password must contain at least 8 characters.
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label
+                                        for="confirmPassword"
+                                        class="form-label"
+                                    >
+                                        Confirm New Password
+                                    </label>
+
+                                    <div class="password-wrapper">
+                                        <input
+                                            type="password"
+                                            class="form-control"
+                                            id="confirmPassword"
+                                            autocomplete="new-password"
+                                            minlength="8"
+                                            required
+                                        >
+
+                                        <button
+                                            type="button"
+                                            class="password-toggle"
+                                            data-target="confirmPassword"
+                                        >
+                                            <img
+                                                src="assets/images/eye-open.png"
+                                                alt="Show password"
+                                            >
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-eztends"
+                                    id="changePasswordButton"
+                                >
+                                    Change Password
+                                </button>
+                            </form>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/admin-profile.js"></script>
+</body>
+</html>

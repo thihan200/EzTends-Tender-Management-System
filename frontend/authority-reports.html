@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Authority Reports - EzTends</title>
+
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .page-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .page-header h1 {
+            font-weight: 800;
+        }
+
+        .page-content-area {
+            margin-top: -28px;
+            padding-bottom: 70px;
+        }
+
+        .summary-card,
+        .filter-card,
+        .report-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .summary-card {
+            height: 100%;
+            padding: 22px;
+        }
+
+        .summary-card p {
+            margin-bottom: 5px;
+            color: var(--eztends-muted);
+            font-weight: 700;
+        }
+
+        .summary-card h2 {
+            margin: 0;
+            color: var(--eztends-dark);
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+
+        .filter-card {
+            padding: 20px;
+        }
+
+        .report-card {
+            overflow: hidden;
+        }
+
+        .report-card-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .report-card-body {
+            overflow-x: auto;
+        }
+
+        .table {
+            min-width: 900px;
+            margin-bottom: 0;
+        }
+
+        .table th {
+            padding: 14px 16px;
+            color: var(--eztends-dark);
+            background: #f7faf9;
+            font-size: 0.84rem;
+            white-space: nowrap;
+        }
+
+        .table td {
+            padding: 14px 16px;
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 800;
+        }
+
+        .status-open,
+        .status-approved,
+        .status-awarded {
+            color: #087f5b;
+            background: #dff5eb;
+        }
+
+        .status-pending,
+        .status-draft,
+        .status-submitted,
+        .status-updated {
+            color: #8a5a00;
+            background: #fff3cd;
+        }
+
+        .status-closed {
+            color: #1553a0;
+            background: #e7f0ff;
+        }
+
+        .status-cancelled,
+        .status-rejected {
+            color: #b02a37;
+            background: #fde8ea;
+        }
+
+        .status-default {
+            color: #5f6368;
+            background: #eeeeee;
+        }
+
+        .empty-area {
+            padding: 55px 20px;
+            color: var(--eztends-muted);
+            text-align: center;
+        }
+
+        .report-title {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .report-note {
+            color: var(--eztends-muted);
+            font-size: 0.87rem;
+        }
+
+        @media print {
+            #siteNavbar,
+            #siteFooter,
+            .page-header,
+            .filter-card,
+            .summary-section,
+            .no-print {
+                display: none !important;
+            }
+
+            .page-content-area {
+                margin-top: 0;
+                padding: 0;
+            }
+
+            .report-card {
+                border: 0;
+                box-shadow: none;
+            }
+
+            .report-card-body {
+                overflow: visible;
+            }
+
+            .table {
+                min-width: 100%;
+            }
+
+            body {
+                background: #ffffff;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="page-header">
+            <div class="container">
+                <p class="mb-2">Tendering Authority</p>
+
+                <h1>Reports</h1>
+
+                <p class="mb-0">
+                    Generate and print reports for your organization's tenders and bids.
+                </p>
+            </div>
+        </section>
+
+        <section class="container page-content-area">
+            <div id="pageMessage"></div>
+
+            <div class="row g-3 mb-4 summary-section">
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Total Tenders</p>
+                        <h2 id="totalTenders">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Total Bids</p>
+                        <h2 id="totalBids">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Total Documents</p>
+                        <h2 id="totalDocuments">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Open Tenders</p>
+                        <h2 id="openTenders">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Closed Tenders</p>
+                        <h2 id="closedTenders">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Awarded Tenders</p>
+                        <h2 id="awardedTenders">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Pending Documents</p>
+                        <h2 id="pendingDocuments">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Approved Bids</p>
+                        <h2 id="approvedBids">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-card mb-4">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label for="reportType" class="form-label">
+                            Report Type
+                        </label>
+
+                        <select class="form-select" id="reportType">
+                            <option value="OVERVIEW">Authority Overview</option>
+                            <option value="TENDERS">Tender Report</option>
+                            <option value="BIDS">Bid Report</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="startDate" class="form-label">
+                            Start Date
+                        </label>
+
+                        <input
+                            type="date"
+                            class="form-control"
+                            id="startDate"
+                        >
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="endDate" class="form-label">
+                            End Date
+                        </label>
+
+                        <input
+                            type="date"
+                            class="form-control"
+                            id="endDate"
+                        >
+                    </div>
+
+                    <div class="col-md-2 d-grid">
+                        <button
+                            type="button"
+                            class="btn btn-eztends"
+                            id="generateReportButton"
+                        >
+                            Generate
+                        </button>
+                    </div>
+                </div>
+
+                <p class="small text-muted mb-0 mt-3">
+                    Date filters apply to Tender and Bid reports.
+                </p>
+            </div>
+
+            <article class="report-card" id="printArea">
+                <div class="report-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div>
+                        <h2 class="h4 mb-1 report-title" id="reportHeading">
+                            Authority Overview Report
+                        </h2>
+
+                        <p class="report-note mb-0" id="reportDescription">
+                            Current summary for your organization.
+                        </p>
+                    </div>
+
+                    <div class="d-flex gap-2 no-print">
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary"
+                            id="printReportButton"
+                        >
+                            Print Report
+                        </button>
+
+                        <a
+                            href="authority-dashboard.html"
+                            class="btn btn-outline-eztends"
+                        >
+                            Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+
+                <div class="report-card-body" id="reportContent">
+                    <div class="empty-area">
+                        Loading report summary...
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/authority-reports.js"></script>
+</body>
+</html>

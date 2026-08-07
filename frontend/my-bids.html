@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Bids - EzTends</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .bids-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .bids-header h1 {
+            font-weight: 800;
+        }
+
+        .bids-content {
+            margin-top: 28px;
+            padding-bottom: 70px;
+        }
+
+        .summary-card {
+            height: 100%;
+            padding: 22px;
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .summary-card p {
+            margin-bottom: 5px;
+            color: var(--eztends-muted);
+            font-weight: 700;
+        }
+
+        .summary-card h2 {
+            margin: 0;
+            color: var(--eztends-dark);
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+
+        .filter-card,
+        .bids-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .filter-card {
+            padding: 22px;
+        }
+
+        .bids-card {
+            overflow: hidden;
+        }
+
+        .bids-card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .table-responsive {
+            min-height: 180px;
+        }
+
+        .bid-title-link {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .bid-title-link:hover {
+            color: var(--eztends-primary);
+        }
+
+        .bid-amount {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .loading-area {
+            padding: 60px 20px;
+            color: var(--eztends-muted);
+            text-align: center;
+        }
+
+        .empty-row td {
+            padding: 50px 20px;
+            color: var(--eztends-muted);
+            text-align: center;
+        }
+
+        @media (max-width: 767.98px) {
+            .action-buttons {
+                min-width: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="bids-header">
+            <div class="container">
+                <p class="mb-2">Supplier Dashboard</p>
+                <h1>My Bids</h1>
+                <p class="mb-0">
+                    View, update and cancel the bids you have submitted.
+                </p>
+            </div>
+        </section>
+
+        <section class="container bids-content">
+            <div id="pageMessage"></div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Total Bids</p>
+                        <h2 id="totalBidCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Active Bids</p>
+                        <h2 id="activeBidCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Approved</p>
+                        <h2 id="approvedBidCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Cancelled</p>
+                        <h2 id="cancelledBidCount">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-card mb-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="searchInput" class="form-label">
+                            Search by Tender
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="searchInput"
+                            placeholder="Enter tender title"
+                        >
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="statusFilter" class="form-label">
+                            Bid Status
+                        </label>
+
+                        <select class="form-select" id="statusFilter">
+                            <option value="ALL">All Statuses</option>
+                            <option value="SUBMITTED">Submitted</option>
+                            <option value="UPDATED">Updated</option>
+                            <option value="APPROVED">Approved</option>
+                            <option value="REJECTED">Rejected</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button
+                            type="button"
+                            class="btn btn-outline-eztends w-100"
+                            id="clearFiltersButton"
+                        >
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <article class="bids-card">
+                <div class="bids-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div>
+                        <h2 class="section-title h4 mb-1">Submitted Bids</h2>
+                        <p class="text-muted mb-0" id="resultCount">
+                            Loading bids...
+                        </p>
+                    </div>
+
+                    <a href="tenders.html" class="btn btn-eztends">
+                        Browse Tenders
+                    </a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Tender</th>
+                                <th>Bid Amount</th>
+                                <th>Proposal</th>
+                                <th>Submitted On</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="bidTableBody">
+                            <tr>
+                                <td colspan="6">
+                                    <div class="loading-area">
+                                        <div class="spinner-border text-success mb-3" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+
+                                        <p class="mb-0">Loading your bids...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <!-- Edit Bid Modal -->
+    <div class="modal fade" id="editBidModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5">Update Bid Amount</h2>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+
+                <form id="editBidForm" novalidate>
+                    <div class="modal-body">
+                        <input type="hidden" id="editBidId">
+
+                        <p class="mb-3">
+                            Tender:
+                            <strong id="editTenderTitle"></strong>
+                        </p>
+
+                        <div class="mb-3">
+                            <label for="editAmount" class="form-label">
+                                New Bid Amount
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="editAmount"
+                                min="0.01"
+                                step="0.01"
+                            >
+
+                            <div
+                                class="invalid-feedback"
+                                id="editAmountError"
+                            ></div>
+                        </div>
+                        <div class="mb-3">
+                            <label
+                                for="editProposalFile"
+                                class="form-label"
+                            >
+                                Replace Proposal Document
+                            </label>
+
+                            <input
+                                type="file"
+                                class="form-control"
+                                id="editProposalFile"
+                                accept=".pdf,.doc,.docx"
+                            >
+
+                            <div class="form-text">
+                                Leave empty to keep the current proposal.
+                                PDF, DOC or DOCX only. Maximum 5 MB.
+                            </div>
+
+                            <div
+                                class="invalid-feedback"
+                                id="editProposalFileError"
+                            ></div>
+                        </div>
+
+                        <div class="mb-3" id="currentProposalArea">
+                            <span class="text-muted">
+                                Current proposal:
+                            </span>
+
+                            <a
+                                href="#"
+                                target="_blank"
+                                id="currentProposalLink"
+                            >
+                                View current file
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn btn-eztends"
+                            id="saveBidButton"
+                        >
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Bid Confirmation Modal -->
+    <div class="modal fade" id="cancelBidModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h2 class="modal-title h5">Cancel Bid</h2>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="cancelBidId">
+
+                    <p class="mb-0">
+                        Are you sure you want to cancel the bid for
+                        <strong id="cancelTenderTitle"></strong>?
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Keep Bid
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-danger"
+                        id="confirmCancelButton"
+                    >
+                        Cancel Bid
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/my-bids.js"></script>
+</body>
+</html>

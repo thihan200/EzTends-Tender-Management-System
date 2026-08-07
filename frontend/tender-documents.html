@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Tender Documents - EzTends</title>
+
+    <link
+        rel="stylesheet"
+        href="assets/bootstrap/css/bootstrap.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/style.css"
+    >
+
+    <style>
+        .documents-card {
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .documents-card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .document-name {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .supplier-info {
+            color: var(--eztends-muted);
+            font-size: 0.88rem;
+        }
+
+        .empty-row td {
+            padding: 50px 20px;
+            color: var(--eztends-muted);
+            text-align: center;
+        }
+
+        .tender-documents-area {
+            padding-bottom: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+
+        <section class="page-header">
+            <div class="container">
+
+                <p class="mb-2">
+                    Tendering Authority
+                </p>
+
+                <h1>
+                    Approved Documents
+                </h1>
+
+                <p class="mb-0">
+                    View Supplier documents approved by
+                    the Administrator for this tender.
+                </p>
+
+            </div>
+        </section>
+
+
+        <section class="container page-content-area tender-documents-area">
+
+            <article class="documents-card">
+
+                <div
+                    class="documents-card-header
+                    d-flex flex-wrap
+                    justify-content-between
+                    align-items-center gap-3"
+                >
+
+                    <div>
+                        <h2
+                            class="h4 mb-1"
+                            id="tenderTitle"
+                        >
+                            Tender Documents
+                        </h2>
+
+                        <p
+                            class="text-muted mb-0"
+                            id="resultCount"
+                        >
+                            Loading documents...
+                        </p>
+                    </div>
+
+                    <a
+                        href="my-tenders.html"
+                        class="btn btn-outline-eztends"
+                    >
+                        Back to My Tenders
+                    </a>
+
+                </div>
+
+
+                <div class="table-responsive">
+
+                    <table class="table mb-0">
+
+                        <thead>
+                            <tr>
+                                <th>Document</th>
+                                <th>Supplier</th>
+                                <th>Uploaded Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="documentTableBody">
+
+                            <tr>
+                                <td
+                                    colspan="5"
+                                    class="text-center py-5"
+                                >
+                                    Loading documents...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </article>
+
+        </section>
+
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/tender-documents.js"></script>
+
+</body>
+</html>

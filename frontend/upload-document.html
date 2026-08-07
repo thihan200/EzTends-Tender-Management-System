@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Upload Document - EzTends</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .upload-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .upload-header h1 {
+            font-weight: 800;
+        }
+
+        .upload-content {
+            margin-top: 28px;
+            padding-bottom: 70px;
+        }
+
+        .upload-card,
+        .info-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 16px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .upload-card-header,
+        .info-card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .upload-card-body,
+        .info-card-body {
+            padding: 24px;
+        }
+
+        .card-title {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .file-drop-area {
+            padding: 34px 20px;
+            text-align: center;
+            background: #f7faf9;
+            border: 2px dashed var(--eztends-border);
+            border-radius: 14px;
+            transition: 0.2s ease;
+        }
+
+        .file-drop-area:hover,
+        .file-drop-area.dragging {
+            background: var(--eztends-primary-light);
+            border-color: var(--eztends-primary);
+        }
+
+        .file-icon {
+            width: 58px;
+            height: 58px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            color: #ffffff;
+            background: var(--eztends-primary);
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+
+        .selected-file {
+            display: none;
+            padding: 14px;
+            margin-top: 16px;
+            background: #eef7f3;
+            border: 1px solid #cfe6dc;
+            border-radius: 10px;
+        }
+
+        .selected-file.show {
+            display: block;
+        }
+
+        .selected-file-name {
+            color: var(--eztends-dark);
+            font-weight: 800;
+            word-break: break-word;
+        }
+
+        .selected-file-size {
+            color: var(--eztends-muted);
+            font-size: 0.85rem;
+        }
+
+        .upload-rule {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .upload-rule:last-child {
+            margin-bottom: 0;
+        }
+
+        .rule-number {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #ffffff;
+            background: var(--eztends-primary);
+            border-radius: 10px;
+            font-weight: 800;
+        }
+
+        .upload-rule h3 {
+            margin-bottom: 3px;
+            color: var(--eztends-dark);
+            font-size: 0.98rem;
+            font-weight: 800;
+        }
+
+        .upload-rule p {
+            margin-bottom: 0;
+            color: var(--eztends-muted);
+            line-height: 1.55;
+        }
+
+        .status-note {
+            padding: 15px;
+            color: #5d4a00;
+            background: #fff6d6;
+            border: 1px solid #f4dc85;
+            border-radius: 12px;
+        }
+
+        .progress {
+            display: none;
+            height: 10px;
+            margin-top: 18px;
+        }
+
+        .progress.show {
+            display: flex;
+        }
+
+        @media (max-width: 991.98px) {
+            .info-card {
+                margin-top: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="upload-header">
+            <div class="container">
+                <p class="mb-2">Supplier Document Submission</p>
+                <h1>Upload Document</h1>
+                <p class="mb-0">
+                    Upload tender proposal and supporting documents.
+                </p>
+            </div>
+        </section>
+
+        <section class="container upload-content">
+            <div id="pageMessage"></div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <article class="upload-card">
+                        <div class="upload-card-header">
+                            <h2 class="card-title h4 mb-1">
+                                Document Details
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Select the tender and choose the document to upload.
+                            </p>
+                        </div>
+
+                        <div class="upload-card-body">
+                            <form id="uploadForm" novalidate>
+                                <div class="mb-4">
+                                    <label for="tenderSelect" class="form-label">
+                                        Select Tender
+                                    </label>
+
+                                    <select class="form-select" id="tenderSelect">
+                                        <option value="">
+                                            Loading open tenders...
+                                        </option>
+                                    </select>
+
+                                    <div
+                                        class="invalid-feedback"
+                                        id="tenderError"
+                                    ></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        Select Document
+                                    </label>
+
+                                    <div class="file-drop-area" id="fileDropArea">
+                                        <div class="file-icon">FILE</div>
+
+                                        <h3 class="h5 card-title">
+                                            Choose a file to upload
+                                        </h3>
+
+                                        <p class="text-muted mb-3">
+                                            PDF, DOC, DOCX, JPG, JPEG or PNG
+                                        </p>
+
+                                        <label
+                                            for="documentFile"
+                                            class="btn btn-outline-eztends"
+                                        >
+                                            Browse File
+                                        </label>
+
+                                        <input
+                                            type="file"
+                                            id="documentFile"
+                                            class="d-none"
+                                            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                        >
+                                    </div>
+
+                                    <div
+                                        class="invalid-feedback d-block"
+                                        id="fileError"
+                                    ></div>
+
+                                    <div class="selected-file" id="selectedFileBox">
+                                        <div class="d-flex align-items-center justify-content-between gap-3">
+                                            <div>
+                                                <div
+                                                    class="selected-file-name"
+                                                    id="selectedFileName"
+                                                ></div>
+
+                                                <div
+                                                    class="selected-file-size"
+                                                    id="selectedFileSize"
+                                                ></div>
+                                            </div>
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                id="removeFileButton"
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="status-note mb-4">
+                                    Uploaded documents are saved with
+                                    <strong>PENDING</strong> status until an
+                                    Administrator validates them.
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-eztends btn-lg w-100"
+                                    id="uploadButton"
+                                >
+                                    Upload Document
+                                </button>
+
+                                <div class="progress" id="uploadProgress">
+                                    <div
+                                        class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                        style="width: 100%"
+                                    ></div>
+                                </div>
+                            </form>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-lg-4">
+                    <article class="info-card">
+                        <div class="info-card-header">
+                            <h2 class="card-title h5 mb-0">
+                                Upload Guidelines
+                            </h2>
+                        </div>
+
+                        <div class="info-card-body">
+                            <div class="upload-rule">
+                                <span class="rule-number">1</span>
+
+                                <div>
+                                    <h3>Select the correct tender</h3>
+                                    <p>
+                                        Choose the tender related to the document.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="upload-rule">
+                                <span class="rule-number">2</span>
+
+                                <div>
+                                    <h3>Use an accepted file type</h3>
+                                    <p>
+                                        Only PDF, DOC, DOCX, JPG, JPEG and PNG
+                                        files are accepted.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="upload-rule">
+                                <span class="rule-number">3</span>
+
+                                <div>
+                                    <h3>Maximum file size</h3>
+                                    <p>
+                                        The selected file must be 5 MB or smaller.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="upload-rule">
+                                <span class="rule-number">4</span>
+
+                                <div>
+                                    <h3>Wait for validation</h3>
+                                    <p>
+                                        An Administrator will approve or reject
+                                        the uploaded document.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <a
+                                href="supplier-dashboard.html"
+                                class="btn btn-outline-eztends w-100 mt-3"
+                            >
+                                Back to Dashboard
+                            </a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/upload-document.js"></script>
+</body>
+</html>

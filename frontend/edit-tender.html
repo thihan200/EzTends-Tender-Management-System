@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Tender - EzTends</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .edit-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .edit-header h1 {
+            font-weight: 800;
+        }
+
+        .edit-content {
+            margin-top: -28px;
+            padding-bottom: 70px;
+        }
+
+        .form-card,
+        .summary-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 16px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .form-card-header,
+        .summary-card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .form-card-body,
+        .summary-card-body {
+            padding: 24px;
+        }
+
+        .card-title {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .form-section {
+            padding-bottom: 22px;
+            margin-bottom: 22px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .form-section:last-child {
+            padding-bottom: 0;
+            margin-bottom: 0;
+            border-bottom: 0;
+        }
+
+        .form-section-title {
+            margin-bottom: 16px;
+            color: var(--eztends-dark);
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .status-open {
+            color: #087f5b;
+            background: #dff5eb;
+        }
+
+        .status-draft {
+            color: #5f6368;
+            background: #eeeeee;
+        }
+
+        .summary-row {
+            padding: 13px 0;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .summary-row:last-child {
+            border-bottom: 0;
+        }
+
+        .summary-label {
+            display: block;
+            color: var(--eztends-muted);
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .summary-value {
+            display: block;
+            margin-top: 3px;
+            color: var(--eztends-dark);
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .status-note {
+            padding: 15px;
+            color: #4a4a4a;
+            background: #f7faf9;
+            border: 1px solid var(--eztends-border);
+            border-radius: 12px;
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .loading-card {
+            padding: 70px 20px;
+            color: var(--eztends-muted);
+            text-align: center;
+        }
+
+        @media (max-width: 991.98px) {
+            .summary-card {
+                margin-top: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="edit-header">
+            <div class="container">
+                <p class="mb-2">Tendering Authority</p>
+                <h1>Edit Tender</h1>
+                <p class="mb-0">Update the selected tender before it is closed or awarded.</p>
+            </div>
+        </section>
+
+        <section class="container edit-content">
+            <div id="pageMessage"></div>
+
+            <div id="loadingCard" class="form-card loading-card">
+                <div class="spinner-border text-success mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mb-0">Loading tender details...</p>
+            </div>
+
+            <div id="editContent" class="d-none">
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <article class="form-card">
+                            <div class="form-card-header">
+                                <h2 class="card-title h4 mb-1">Tender Information</h2>
+                                <p class="text-muted mb-0">Review and update the tender details.</p>
+                            </div>
+
+                            <div class="form-card-body">
+                                <form id="editTenderForm" novalidate>
+                                    <div class="form-section">
+                                        <h3 class="form-section-title">Basic Details</h3>
+
+                                        <div class="mb-3">
+                                            <label for="title" class="form-label">Tender Title</label>
+                                            <input type="text" class="form-control" id="title" maxlength="150">
+                                            <div class="invalid-feedback" id="titleError"></div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="description" class="form-label">Description</label>
+                                            <textarea class="form-control" id="description" rows="6" maxlength="3000"></textarea>
+
+                                            <div class="d-flex justify-content-between mt-1">
+                                                <div class="invalid-feedback d-block" id="descriptionError"></div>
+                                                <small class="text-muted"><span id="descriptionCount">0</span>/3000</small>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label for="categoryId" class="form-label">Category</label>
+                                            <select class="form-select" id="categoryId">
+                                                <option value="">Loading categories...</option>
+                                            </select>
+                                            <div class="invalid-feedback" id="categoryError"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-section">
+                                        <h3 class="form-section-title">Budget and Dates</h3>
+
+                                        <div class="mb-3">
+                                            <label for="budget" class="form-label">Estimated Budget (LKR)</label>
+                                            <input type="number" class="form-control" id="budget" min="1" step="0.01">
+                                            <div class="invalid-feedback" id="budgetError"></div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="openDate" class="form-label">Open Date</label>
+                                                <input type="date" class="form-control" id="openDate">
+                                                <div class="invalid-feedback" id="openDateError"></div>
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="closeDate" class="form-label">Closing Date</label>
+                                                <input type="date" class="form-control" id="closeDate">
+                                                <div class="invalid-feedback" id="closeDateError"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-section">
+                                        <h3 class="form-section-title">Publication Status</h3>
+
+                                        <div class="mb-3">
+                                            <label for="status" class="form-label">Tender Status</label>
+                                            <select class="form-select" id="status">
+                                                <option value="DRAFT">Draft</option>
+                                                <option value="OPEN">Open</option>
+                                            </select>
+                                            <div class="invalid-feedback" id="statusError"></div>
+                                        </div>
+
+                                        <div class="status-note" id="statusNote">
+                                            Draft tenders can be published by changing their status to Open.
+                                        </div>
+                                    </div>
+
+                                    <div class="button-row">
+                                        <button type="submit" class="btn btn-eztends" id="saveTenderButton">
+                                            Save Changes
+                                        </button>
+
+                                        <a href="my-tenders.html" class="btn btn-outline-secondary">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <article class="summary-card">
+                            <div class="summary-card-header">
+                                <h2 class="card-title h5 mb-0">Tender Summary</h2>
+                            </div>
+
+                            <div class="summary-card-body">
+                                <div class="mb-3">
+                                    <span class="status-badge status-draft" id="currentStatusBadge">DRAFT</span>
+                                </div>
+
+                                <div class="summary-row">
+                                    <span class="summary-label">Tender ID</span>
+                                    <span class="summary-value" id="summaryTenderId">-</span>
+                                </div>
+
+                                <div class="summary-row">
+                                    <span class="summary-label">Created By</span>
+                                    <span class="summary-value" id="summaryCreatedBy">-</span>
+                                </div>
+
+                                <div class="summary-row">
+                                    <span class="summary-label">Created Date</span>
+                                    <span class="summary-value" id="summaryCreatedDate">-</span>
+                                </div>
+
+                                <a href="#" class="btn btn-outline-eztends w-100 mt-4" id="viewTenderButton">View Tender</a>
+                                <a href="my-tenders.html" class="btn btn-outline-secondary w-100 mt-2">Back to My Tenders</a>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/edit-tender.js"></script>
+</body>
+</html>

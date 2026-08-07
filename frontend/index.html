@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EzTends - Tender Management System</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <!-- Local Bootstrap files -->
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+
+    <!-- Shared EzTends stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        /* Home page styles */
+
+        .home-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 88px 0;
+            color: #ffffff;
+            background:
+                radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.18), transparent 25%),
+                radial-gradient(circle at 75% 82%, rgba(243, 167, 18, 0.25), transparent 22%),
+                linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .home-hero::before,
+        .home-hero::after {
+            position: absolute;
+            content: "";
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 50%;
+        }
+
+        .home-hero::before {
+            width: 320px;
+            height: 320px;
+            top: -170px;
+            right: 8%;
+        }
+
+        .home-hero::after {
+            width: 190px;
+            height: 190px;
+            right: 30%;
+            bottom: -115px;
+        }
+
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 13px;
+            margin-bottom: 18px;
+            color: #d6f4e7;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .hero-title {
+            max-width: 720px;
+            margin-bottom: 20px;
+            font-size: clamp(2.4rem, 5vw, 4.3rem);
+            font-weight: 800;
+            line-height: 1.06;
+        }
+
+        .hero-text {
+            max-width: 650px;
+            margin-bottom: 30px;
+            color: #d7ebe4;
+            font-size: 1.08rem;
+            line-height: 1.8;
+        }
+
+        .btn-hero-light {
+            color: #056044;
+            background: #ffffff;
+            border: 1px solid #ffffff;
+            border-radius: 10px;
+            font-weight: 800;
+        }
+
+        .btn-hero-light:hover {
+            color: #ffffff;
+            background: transparent;
+        }
+
+        .btn-hero-outline {
+            color: #ffffff;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            border-radius: 10px;
+            font-weight: 800;
+        }
+
+        .btn-hero-outline:hover {
+            color: #056044;
+            background: #ffffff;
+        }
+
+        .hero-panel {
+            position: relative;
+            z-index: 1;
+            padding: 26px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 22px;
+            backdrop-filter: blur(8px);
+        }
+
+        .hero-panel-title {
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .hero-mini-card {
+            padding: 18px;
+            color: #16332b;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 14px 30px rgba(4, 45, 31, 0.18);
+        }
+
+        .hero-mini-card + .hero-mini-card {
+            margin-top: 14px;
+        }
+
+        .hero-mini-card small {
+            color: #6b7c76;
+            font-weight: 700;
+        }
+
+        .hero-mini-card strong {
+            display: block;
+            margin-top: 4px;
+            color: #087f5b;
+            font-size: 1.65rem;
+        }
+
+        .stats-section {
+            position: relative;
+            z-index: 2;
+            margin-top: -36px;
+        }
+
+        .stat-card {
+            height: 100%;
+            padding: 24px;
+            background: #ffffff;
+            border: 1px solid #dce7e2;
+            border-radius: 15px;
+            box-shadow: 0 12px 28px rgba(20, 67, 52, 0.09);
+        }
+
+        .stat-card p {
+            margin: 0;
+            color: #6b7c76;
+            font-weight: 700;
+        }
+
+        .stat-card h2 {
+            margin: 7px 0 0;
+            color: #16332b;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .stat-accent {
+            width: 40px;
+            height: 5px;
+            margin-bottom: 15px;
+            background: #087f5b;
+            border-radius: 999px;
+        }
+
+        .section-space {
+            padding: 76px 0;
+        }
+
+        .section-intro {
+            max-width: 680px;
+            margin: 0 auto 36px;
+            color: #6b7c76;
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        .tender-card {
+            height: 100%;
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid #dce7e2;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(20, 67, 52, 0.07);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .tender-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 18px 36px rgba(20, 67, 52, 0.13);
+        }
+
+        .tender-card-body {
+            padding: 23px;
+        }
+
+        .tender-category {
+            display: inline-block;
+            padding: 5px 10px;
+            margin-bottom: 14px;
+            color: #056044;
+            background: #e8f5f0;
+            border-radius: 999px;
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+
+        .tender-title {
+            min-height: 56px;
+            margin-bottom: 12px;
+            color: #16332b;
+            font-size: 1.08rem;
+            font-weight: 800;
+            line-height: 1.45;
+        }
+
+        .tender-description {
+            min-height: 68px;
+            margin-bottom: 18px;
+            color: #6b7c76;
+            line-height: 1.6;
+        }
+
+        .tender-meta {
+            display: grid;
+            gap: 9px;
+            margin-bottom: 18px;
+            color: #465d55;
+            font-size: 0.9rem;
+        }
+
+        .tender-meta strong {
+            color: #16332b;
+        }
+
+        .tender-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 23px;
+            background: #f2f7f5;
+            border-top: 1px solid #dce7e2;
+        }
+
+        .days-left {
+            color: #087f5b;
+            font-size: 0.82rem;
+            font-weight: 800;
+        }
+
+        .how-card {
+            height: 100%;
+            padding: 30px;
+            background: #ffffff;
+            border: 1px solid #dce7e2;
+            border-radius: 16px;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: #ffffff;
+            background: #087f5b;
+            border-radius: 14px;
+            font-size: 1.15rem;
+            font-weight: 800;
+        }
+
+        .how-card h3 {
+            color: #16332b;
+            font-size: 1.18rem;
+            font-weight: 800;
+        }
+
+        .how-card p {
+            margin-bottom: 0;
+            color: #6b7c76;
+            line-height: 1.7;
+        }
+
+        .home-cta {
+            padding: 48px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #16332b, #056044);
+            border-radius: 22px;
+        }
+
+        .home-cta h2 {
+            font-weight: 800;
+        }
+
+        .home-cta p {
+            max-width: 720px;
+            color: #c9ddd6;
+        }
+
+        .loading-box {
+            padding: 52px 20px;
+            color: #6b7c76;
+            text-align: center;
+        }
+
+        @media (max-width: 991.98px) {
+            .home-hero {
+                padding: 68px 0 82px;
+            }
+
+            .hero-panel {
+                margin-top: 36px;
+            }
+
+            .stats-section {
+                margin-top: -28px;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .home-hero {
+                padding: 55px 0 70px;
+            }
+
+            .hero-title {
+                font-size: 2.45rem;
+            }
+
+            .home-cta {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body data-page="home">
+
+    <!-- Shared navbar -->
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+
+        <!-- Hero section -->
+        <section class="home-hero">
+            <div class="container position-relative">
+                <div class="row align-items-center">
+                    <div class="col-lg-7">
+                        <span class="hero-label">
+                            Local and transparent tender management
+                        </span>
+
+                        <h1 class="hero-title">
+                            Find opportunities. Submit bids. Manage tenders easily.
+                        </h1>
+
+                        <p class="hero-text">
+                            EzTends connects Suppliers and Tendering Authorities through
+                            one secure local platform for publishing tenders, submitting
+                            bids, validating documents and selecting suppliers.
+                        </p>
+
+                        <div class="d-flex flex-wrap gap-3">
+                            <a class="btn btn-hero-light btn-lg px-4"
+                               href="tenders.html">
+                                Browse Tenders
+                            </a>
+
+                            <a class="btn btn-hero-outline btn-lg px-4"
+                               id="heroAccountButton"
+                               href="register.html">
+                                Create Account
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="hero-panel">
+                            <p class="hero-panel-title">
+                                Current System Overview
+                            </p>
+
+                            <div class="hero-mini-card">
+                                <small>Open Tenders</small>
+                                <strong id="heroOpenTenders">0</strong>
+                            </div>
+
+                            <div class="hero-mini-card">
+                                <small>Latest Opportunity</small>
+                                <strong class="fs-6" id="heroLatestTender">
+                                    Loading tenders...
+                                </strong>
+                            </div>
+
+                            <div class="hero-mini-card">
+                                <small>System Access</small>
+                                <strong class="fs-6">
+                                    Admin · Supplier · Tendering Authority
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics -->
+        <section class="stats-section">
+            <div class="container">
+                <div class="row g-3">
+                    <div class="col-6 col-lg-3">
+                        <div class="stat-card">
+                            <div class="stat-accent"></div>
+                            <p>Total Tenders</p>
+                            <h2 id="totalTenderCount">0</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-lg-3">
+                        <div class="stat-card">
+                            <div class="stat-accent"></div>
+                            <p>Open Tenders</p>
+                            <h2 id="openTenderCount">0</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-lg-3">
+                        <div class="stat-card">
+                            <div class="stat-accent"></div>
+                            <p>Awarded Tenders</p>
+                            <h2 id="awardedTenderCount">0</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-lg-3">
+                        <div class="stat-card">
+                            <div class="stat-accent"></div>
+                            <p>Categories</p>
+                            <h2 id="categoryCount">0</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latest tenders -->
+        <section class="section-space">
+            <div class="container">
+                <div class="text-center">
+                    <span class="tender-category">Latest Opportunities</span>
+                    <h2 class="section-title">Recently Published Tenders</h2>
+                    <p class="section-intro">
+                        Explore the latest open tender opportunities published by
+                        registered Tendering Authorities.
+                    </p>
+                </div>
+
+                <div id="tenderMessage"></div>
+
+                <div class="row g-4" id="latestTenderList">
+                    <div class="col-12">
+                        <div class="loading-box">
+                            <div class="spinner-border text-success mb-3" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mb-0">Loading latest tenders...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a class="btn btn-eztends btn-lg px-4"
+                       href="tenders.html">
+                        View All Tenders
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it works -->
+        <section class="section-space bg-white border-top border-bottom">
+            <div class="container">
+                <div class="text-center">
+                    <span class="tender-category">Simple Process</span>
+                    <h2 class="section-title">How EzTends Works</h2>
+                    <p class="section-intro">
+                        The system supports the main tender process from publishing
+                        an opportunity to selecting the successful supplier.
+                    </p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <article class="how-card">
+                            <span class="step-number">01</span>
+                            <h3>Publish a Tender</h3>
+                            <p>
+                                A Tendering Authority creates a tender with its
+                                category, budget, dates and required documents.
+                            </p>
+                        </article>
+                    </div>
+
+                    <div class="col-md-4">
+                        <article class="how-card">
+                            <span class="step-number">02</span>
+                            <h3>Submit a Bid</h3>
+                            <p>
+                                Suppliers browse open tenders, submit their bid
+                                amount and upload the required proposal documents.
+                            </p>
+                        </article>
+                    </div>
+
+                    <div class="col-md-4">
+                        <article class="how-card">
+                            <span class="step-number">03</span>
+                            <h3>Select a Supplier</h3>
+                            <p>
+                                The Tendering Authority reviews submitted bids,
+                                selects a supplier and marks the tender as awarded.
+                            </p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to action -->
+        <section class="section-space">
+            <div class="container">
+                <div class="home-cta">
+                    <div class="row align-items-center g-4">
+                        <div class="col-lg-8">
+                            <h2>Ready to use EzTends?</h2>
+                            <p class="mb-0">
+                                Register as a Supplier or Tendering Authority and
+                                manage the tender process through one local system.
+                            </p>
+                        </div>
+
+                        <div class="col-lg-4 text-lg-end">
+                            <a class="btn btn-hero-light btn-lg px-4"
+                               id="ctaAccountButton"
+                               href="register.html">
+                                Get Started
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Shared footer -->
+    <div id="siteFooter"></div>
+
+    <!-- Local scripts -->
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/home.js"></script>
+</body>
+</html>

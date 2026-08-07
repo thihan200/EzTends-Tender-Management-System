@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Tenders - EzTends</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .page-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .page-header h1 {
+            font-weight: 800;
+        }
+
+        .page-content-area {
+            margin-top: 28px;
+            padding-bottom: 70px;
+        }
+
+        .summary-card,
+        .filter-card,
+        .table-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .summary-card {
+            height: 100%;
+            padding: 22px;
+        }
+
+        .summary-card p {
+            margin-bottom: 5px;
+            color: var(--eztends-muted);
+            font-weight: 700;
+        }
+
+        .summary-card h2 {
+            margin: 0;
+            color: var(--eztends-dark);
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+
+        .filter-card {
+            padding: 20px;
+        }
+
+        .table-card {
+            overflow: hidden;
+        }
+
+        .table-card-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .table-card-body {
+            overflow-x: auto;
+        }
+
+        .table {
+            min-width: 1050px;
+            margin-bottom: 0;
+        }
+
+        .table th {
+            padding: 15px;
+            color: var(--eztends-dark);
+            background: #f7faf9;
+            border-bottom: 1px solid var(--eztends-border);
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .tender-title-link {
+            color: var(--eztends-dark);
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .tender-title-link:hover {
+            color: var(--eztends-primary);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .status-open {
+            color: #087f5b;
+            background: #dff5eb;
+        }
+
+        .status-closed {
+            color: #8a5a00;
+            background: #fff3cd;
+        }
+
+        .status-awarded {
+            color: #1553a0;
+            background: #e7f0ff;
+        }
+
+        .status-cancelled {
+            color: #b02a37;
+            background: #fde8ea;
+        }
+
+        .status-draft {
+            color: #5f6368;
+            background: #eeeeee;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .empty-row td {
+            padding: 55px 20px;
+            text-align: center;
+        }
+
+        .loading-row td {
+            padding: 55px 20px;
+            color: var(--eztends-muted);
+            text-align: center;
+        }
+
+        .result-count {
+            color: var(--eztends-muted);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="page-header">
+            <div class="container">
+                <p class="mb-2">Tendering Authority</p>
+                <h1>My Tenders</h1>
+                <p class="mb-0">
+                    View and manage tenders created by your Authority account.
+                </p>
+            </div>
+        </section>
+
+        <section class="container page-content-area">
+            <div id="pageMessage"></div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Total Tenders</p>
+                        <h2 id="totalTenderCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Open</p>
+                        <h2 id="openTenderCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Closed</p>
+                        <h2 id="closedTenderCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Awarded</p>
+                        <h2 id="awardedTenderCount">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-card mb-4">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label for="searchInput" class="form-label">
+                            Search Tenders
+                        </label>
+
+                        <input
+                            type="search"
+                            class="form-control"
+                            id="searchInput"
+                            placeholder="Search by tender title"
+                        >
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="statusFilter" class="form-label">
+                            Status
+                        </label>
+
+                        <select class="form-select" id="statusFilter">
+                            <option value="ALL">All Statuses</option>
+                            <option value="DRAFT">Draft</option>
+                            <option value="OPEN">Open</option>
+                            <option value="CLOSED">Closed</option>
+                            <option value="AWARDED">Awarded</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 d-grid">
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary"
+                            id="clearFiltersButton"
+                        >
+                            Clear Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <article class="table-card">
+                <div class="table-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div>
+                        <h2 class="h4 mb-1">Tender List</h2>
+                        <p class="result-count mb-0" id="resultCount">
+                            Loading tenders...
+                        </p>
+                    </div>
+
+                    <a href="create-tender.html" class="btn btn-eztends">
+                        Create Tender
+                    </a>
+                </div>
+
+                <div class="table-card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tender</th>
+                                <th>Category</th>
+                                <th>Budget</th>
+                                <th>Closing Date</th>
+                                <th>Status</th>
+                                <th>Bids</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tenderTableBody">
+                            <tr class="loading-row">
+                                <td colspan="7">
+                                    <div class="spinner-border text-success mb-3" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+
+                                    <p class="mb-0">Loading your tenders...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <!-- Close Tender Modal -->
+    <div class="modal fade" id="closeTenderModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5">Close Tender</h2>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>
+                        Are you sure you want to close
+                        <strong id="closeTenderTitle"></strong>?
+                    </p>
+
+                    <p class="text-muted mb-0">
+                        Suppliers will no longer be able to submit new bids.
+                    </p>
+
+                    <input type="hidden" id="closeTenderId">
+                </div>
+
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Back
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-warning"
+                        id="confirmCloseButton"
+                    >
+                        Close Tender
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Tender Modal -->
+    <div class="modal fade" id="cancelTenderModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5">Cancel Tender</h2>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>
+                        Are you sure you want to cancel
+                        <strong id="cancelTenderTitle"></strong>?
+                    </p>
+
+                    <p class="text-danger mb-0">
+                        This action cannot be reversed.
+                    </p>
+
+                    <input type="hidden" id="cancelTenderId">
+                </div>
+
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Back
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-danger"
+                        id="confirmCancelButton"
+                    >
+                        Cancel Tender
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reopen Tender Modal -->
+    <div
+        class="modal fade"
+        id="reopenTenderModal"
+        tabindex="-1"
+    >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h2 class="modal-title h5">
+                        Reopen Tender
+                    </h2>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <p>
+                        Select a new closing date for this tender.
+                    </p>
+
+                    <input
+                        type="hidden"
+                        id="reopenTenderId"
+                    >
+
+                    <div class="mb-3">
+                        <label
+                            for="reopenCloseDate"
+                            class="form-label"
+                        >
+                            New Closing Date
+                        </label>
+
+                        <input
+                            type="date"
+                            class="form-control"
+                            id="reopenCloseDate"
+                            required
+                        >
+
+                        <div
+                            class="invalid-feedback"
+                            id="reopenDateError"
+                        ></div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-eztends"
+                        id="confirmReopenButton"
+                    >
+                        Reopen Tender
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/my-tenders.js"></script>
+</body>
+</html>

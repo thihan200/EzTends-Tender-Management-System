@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tender Bids - EzTends</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .page-header{padding:52px 0;color:#fff;background:linear-gradient(135deg,#056044,#087f5b)}
+        .page-header h1{font-weight:800}.page-content-area{margin-top:-28px;padding-bottom:70px}
+        .tender-card,.summary-card,.table-card{background:#fff;border:1px solid var(--eztends-border);border-radius:15px;box-shadow:var(--eztends-shadow)}
+        .tender-card{padding:24px}.tender-card h2{color:var(--eztends-dark);font-weight:800}
+        .tender-meta{display:flex;flex-wrap:wrap;gap:18px;color:var(--eztends-muted);font-size:.9rem}.tender-meta strong{color:var(--eztends-dark)}
+        .summary-card{height:100%;padding:22px}.summary-card p{margin-bottom:5px;color:var(--eztends-muted);font-weight:700}.summary-card h2{margin:0;color:var(--eztends-dark);font-size:1.9rem;font-weight:800}
+        .status-badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:.75rem;font-weight:800}
+        .status-submitted,.status-updated,.status-open{color:#087f5b;background:#dff5eb}.status-approved,.status-awarded{color:#1553a0;background:#e7f0ff}
+        .status-rejected{color:#b02a37;background:#fde8ea}.status-cancelled,.status-draft{color:#5f6368;background:#eee}.status-closed{color:#8a5a00;background:#fff3cd}
+        .table-card{overflow:hidden}.table-card-header{padding:20px 22px;border-bottom:1px solid var(--eztends-border)}.table-card-body{overflow-x:auto}
+        .table{min-width:1180px;margin-bottom:0}.table th{padding:15px;color:var(--eztends-dark);background:#f7faf9;font-size:.85rem;white-space:nowrap}.table td{padding:15px;vertical-align:middle}
+        .supplier-name{color:var(--eztends-dark);font-weight:800}.company-name{color:var(--eztends-muted);font-size:.85rem}.bid-amount{font-weight:800;white-space:nowrap}
+        .empty-row td,.loading-row td{padding:55px 20px;text-align:center}.selection-note{padding:15px;border-radius:12px}.selection-note.open{color:#5d4a00;background:#fff6d6;border:1px solid #f4dc85}.selection-note.closed{color:#075c45;background:#e7f7f1;border:1px solid #b9e5d5}.selection-note.locked{color:#5f6368;background:#f2f2f2;border:1px solid #ddd}
+    </style>
+</head>
+<body>
+    <div id="siteNavbar"></div>
+    <main class="page-content">
+        <section class="page-header">
+            <div class="container">
+                <p class="mb-2">Tendering Authority</p>
+                <h1>Received Bids</h1>
+                <p class="mb-0">Review Supplier proposals and select the winning bid.</p>
+            </div>
+        </section>
+
+        <section class="container page-content-area">
+            <div id="pageMessage"></div>
+
+            <article class="tender-card mb-4">
+                <div class="row align-items-center g-3">
+                    <div class="col-lg-8">
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                            <h2 class="h4 mb-0" id="tenderTitle">Loading tender...</h2>
+                            <span class="status-badge status-draft" id="tenderStatus">-</span>
+                        </div>
+                        <div class="tender-meta">
+                            <span><strong>Tender ID:</strong> <span id="tenderIdText">-</span></span>
+                            <span><strong>Closing Date:</strong> <span id="tenderCloseDate">-</span></span>
+                            <span><strong>Budget:</strong> <span id="tenderBudget">-</span></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <a href="my-tenders.html" class="btn btn-outline-secondary">Back to My Tenders</a>
+                    </div>
+                </div>
+            </article>
+
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3"><div class="summary-card"><p>Total Bids</p><h2 id="totalBidCount">0</h2></div></div>
+                <div class="col-6 col-lg-2"><div class="summary-card"><p>Active Bids</p><h2 id="activeBidCount">0</h2></div></div>
+                <div class="col-12 col-lg-4"><div class="summary-card"><p>Lowest Bid</p><h2 class="h5" id="lowestBidAmount">-</h2></div></div>
+                <div class="col-6 col-lg-3"><div class="summary-card"><p>Selected Bid</p><h2 id="selectedBidCount">0</h2></div></div>
+            </div>
+
+            <div class="selection-note open mb-4" id="selectionNote">Loading selection rules...</div>
+
+            <article class="table-card">
+                <div class="table-card-header">
+                    <h2 class="h4 mb-1">Supplier Bids</h2>
+                    <p class="text-muted mb-0" id="resultCount">Loading bids...</p>
+                </div>
+                <div class="table-card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Supplier</th><th>Email</th><th>Bid Amount</th><th>Proposal</th><th>Submitted On</th><th>Status</th><th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bidTableBody">
+                            <tr class="loading-row"><td colspan="7"><div class="spinner-border text-success mb-3" role="status"></div><p class="mb-0">Loading Supplier bids...</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <div class="modal fade" id="selectSupplierModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5">Select Winning Supplier</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Select <strong id="selectedSupplierName"></strong> as the winning Supplier?</p>
+                    <div class="p-3 bg-light rounded">
+                        <div class="mb-2"><strong>Company:</strong> <span id="selectedCompanyName"></span></div>
+                        <div><strong>Bid Amount:</strong> <span id="selectedBidAmount"></span></div>
+                    </div>
+                    <p class="text-danger mt-3 mb-0">The selected bid will be approved, other active bids will be rejected and the tender will be awarded.</p>
+                    <input type="hidden" id="selectedBidId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Back</button>
+                    <button type="button" class="btn btn-eztends" id="confirmSelectButton">Select Supplier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="siteFooter"></div>
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/tender-bids.js"></script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Documents - EzTends</title>
+
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .page-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .page-header h1 {
+            font-weight: 800;
+        }
+
+        .page-content-area {
+            margin-top: -28px;
+            padding-bottom: 70px;
+        }
+
+        .summary-card,
+        .filter-card,
+        .table-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .summary-card {
+            height: 100%;
+            padding: 22px;
+        }
+
+        .summary-card p {
+            margin-bottom: 5px;
+            color: var(--eztends-muted);
+            font-weight: 700;
+        }
+
+        .summary-card h2 {
+            margin: 0;
+            color: var(--eztends-dark);
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+
+        .filter-card {
+            padding: 20px;
+        }
+
+        .table-card {
+            overflow: hidden;
+        }
+
+        .table-card-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .table-card-body {
+            overflow-x: auto;
+        }
+
+        .table {
+            min-width: 1100px;
+            margin-bottom: 0;
+        }
+
+        .table th {
+            padding: 15px;
+            color: var(--eztends-dark);
+            background: #f7faf9;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .document-name {
+            color: var(--eztends-dark);
+            font-weight: 800;
+            word-break: break-word;
+        }
+
+        .small-note {
+            color: var(--eztends-muted);
+            font-size: 0.84rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .status-pending {
+            color: #8a5a00;
+            background: #fff3cd;
+        }
+
+        .status-approved {
+            color: #087f5b;
+            background: #dff5eb;
+        }
+
+        .status-rejected {
+            color: #b02a37;
+            background: #fde8ea;
+        }
+
+        .status-default {
+            color: #5f6368;
+            background: #eeeeee;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .empty-row td,
+        .loading-row td {
+            padding: 55px 20px;
+            text-align: center;
+        }
+
+        .confirmation-box {
+            padding: 14px;
+            background: #f7faf9;
+            border: 1px solid var(--eztends-border);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="page-header">
+            <div class="container">
+                <p class="mb-2">System Administration</p>
+                <h1>Document Validation</h1>
+                <p class="mb-0">
+                    Review uploaded tender documents and update their validation status.
+                </p>
+            </div>
+        </section>
+
+        <section class="container page-content-area">
+            <div id="pageMessage"></div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Total Documents</p>
+                        <h2 id="totalDocumentCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Pending</p>
+                        <h2 id="pendingDocumentCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Approved</p>
+                        <h2 id="approvedDocumentCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Rejected</p>
+                        <h2 id="rejectedDocumentCount">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-card mb-4">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label for="searchInput" class="form-label">
+                            Search Documents
+                        </label>
+
+                        <input
+                            type="search"
+                            class="form-control"
+                            id="searchInput"
+                            placeholder="Search filename, tender, uploader or email"
+                        >
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="statusFilter" class="form-label">
+                            Validation Status
+                        </label>
+
+                        <select class="form-select" id="statusFilter">
+                            <option value="ALL">All Statuses</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="APPROVED">Approved</option>
+                            <option value="REJECTED">Rejected</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 d-grid">
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary"
+                            id="clearFiltersButton"
+                        >
+                            Clear Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <article class="table-card">
+                <div class="table-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div>
+                        <h2 class="h4 mb-1">Uploaded Documents</h2>
+                        <p class="text-muted mb-0" id="resultCount">
+                            Loading documents...
+                        </p>
+                    </div>
+
+                    <a
+                        href="admin-dashboard.html"
+                        class="btn btn-outline-eztends"
+                    >
+                        Back to Dashboard
+                    </a>
+                </div>
+
+                <div class="table-card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Document</th>
+                                <th>Tender</th>
+                                <th>Uploaded By</th>
+                                <th>Uploaded Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="documentTableBody">
+                            <tr class="loading-row">
+                                <td colspan="6">
+                                    Loading uploaded documents...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <div class="modal fade" id="validationModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="validationModalTitle">
+                        Validate Document
+                    </h2>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="confirmation-box">
+                        <p class="mb-1">
+                            Document:
+                            <strong id="validationDocumentName"></strong>
+                        </p>
+
+                        <p class="mb-0">
+                            New Status:
+                            <strong id="validationStatusText"></strong>
+                        </p>
+                    </div>
+
+                    <input type="hidden" id="validationDocumentId">
+                    <input type="hidden" id="validationStatus">
+
+                    <p class="mt-3 mb-0" id="validationMessage"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-eztends"
+                        id="confirmValidationButton"
+                    >
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/admin-documents.js"></script>
+</body>
+</html>

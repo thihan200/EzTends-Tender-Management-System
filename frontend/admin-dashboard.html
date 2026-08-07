@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - EzTends</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .dashboard-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .dashboard-header h1 {
+            font-weight: 800;
+        }
+
+        .dashboard-content {
+            margin-top: -28px;
+            padding-bottom: 70px;
+        }
+
+        .welcome-card,
+        .summary-card,
+        .quick-card,
+        .section-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .welcome-card {
+            padding: 24px;
+        }
+
+        .welcome-card h2 {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .welcome-card p {
+            color: var(--eztends-muted);
+        }
+
+        .summary-card {
+            height: 100%;
+            padding: 21px;
+        }
+
+        .summary-card p {
+            margin-bottom: 6px;
+            color: var(--eztends-muted);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .summary-card h2 {
+            margin: 0;
+            color: var(--eztends-dark);
+            font-size: 1.85rem;
+            font-weight: 800;
+        }
+
+        .quick-card {
+            height: 100%;
+            padding: 24px;
+            transition: transform 0.2s ease;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .quick-icon {
+            width: 50px;
+            height: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            background: #ecf0f1;
+            border-radius: 13px;
+            font-size: 1.05rem;
+            font-weight: 800;
+        }
+
+        .quick-card h3 {
+            color: var(--eztends-dark);
+            font-size: 1.06rem;
+            font-weight: 800;
+        }
+
+        .quick-card p {
+            color: var(--eztends-muted);
+            line-height: 1.6;
+        }
+
+        .section-card {
+            overflow: hidden;
+        }
+
+        .section-card-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .section-card-body {
+            overflow-x: auto;
+        }
+
+        .table {
+            min-width: 650px;
+            margin-bottom: 0;
+        }
+
+        .table th {
+            padding: 14px 16px;
+            color: var(--eztends-dark);
+            background: #f7faf9;
+            font-size: 0.84rem;
+            white-space: nowrap;
+        }
+
+        .table td {
+            padding: 14px 16px;
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 800;
+        }
+
+        .status-pending {
+            color: #8a5a00;
+            background: #fff3cd;
+        }
+
+        .status-approved,
+        .status-active {
+            color: #087f5b;
+            background: #dff5eb;
+        }
+
+        .status-rejected,
+        .status-disabled {
+            color: #b02a37;
+            background: #fde8ea;
+        }
+
+        .status-default {
+            color: #5f6368;
+            background: #eeeeee;
+        }
+
+        .empty-area {
+            padding: 45px 20px;
+            color: var(--eztends-muted);
+            text-align: center;
+        }
+
+        .user-name,
+        .document-name {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .small-note {
+            color: var(--eztends-muted);
+            font-size: 0.84rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="dashboard-header">
+            <div class="container">
+                <p class="mb-2">System Administration</p>
+                <h1 id="headerWelcome">Admin Dashboard</h1>
+                <p class="mb-0">
+                    Manage users, validate documents and review system activity.
+                </p>
+            </div>
+        </section>
+
+        <section class="container dashboard-content">
+            <div id="pageMessage"></div>
+
+            <div class="welcome-card mb-4">
+                <div class="row align-items-center g-3">
+                    <div class="col-lg-8">
+                        <h2 class="h4 mb-2" id="welcomeName">
+                            Welcome to EzTends
+                        </h2>
+                        <p class="mb-0" id="welcomeEmail"></p>
+                    </div>
+
+                    <div class="col-lg-4 text-lg-end">
+                        <a href="admin-profile.html" class="btn btn-eztends">
+                            My Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Total Users</p>
+                        <h2 id="totalUserCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Suppliers</p>
+                        <h2 id="supplierCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Authorities</p>
+                        <h2 id="authorityCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Total Tenders</p>
+                        <h2 id="tenderCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Total Bids</p>
+                        <h2 id="bidCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Pending Documents</p>
+                        <h2 id="pendingDocumentCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Approved Documents</p>
+                        <h2 id="approvedDocumentCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="summary-card">
+                        <p>Rejected Documents</p>
+                        <h2 id="rejectedDocumentCount">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <a href="admin-users.html" class="text-reset">
+                        <article class="quick-card">
+                            <div class="quick-icon">
+                                <img src="assets/images/manage-bids.png" alt="Manage Bids">
+                            </div>
+                            <h3>Manage Users</h3>
+                            <p class="mb-0">
+                                View Supplier and Tendering Authority accounts.
+                            </p>
+                        </article>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="admin-documents.html" class="text-reset">
+                        <article class="quick-card">
+                            <div class="quick-icon">
+                                <img src="assets/images/validate-doc.png" alt="Manage Bids">
+                            </div>
+                            <h3>Validate Documents</h3>
+                            <p class="mb-0">
+                                Review pending uploads and approve or reject them.
+                            </p>
+                        </article>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="admin-reports.html" class="text-reset">
+                        <article class="quick-card">
+                            <div class="quick-icon">
+                                <img src="assets/images/view-report.png" alt="Manage Bids">
+                            </div>
+                            <h3>View Reports</h3>
+                            <p class="mb-0">
+                                Generate system, tender, bid and user reports.
+                            </p>
+                        </article>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-xl-6">
+                    <article class="section-card h-100">
+                        <div class="section-card-header d-flex align-items-center justify-content-between gap-3">
+                            <div>
+                                <h2 class="h5 mb-1">Recent Users</h2>
+                                <p class="small-note mb-0">
+                                    Latest registered user accounts.
+                                </p>
+                            </div>
+
+                            <a href="admin-users.html" class="btn btn-sm btn-outline-eztends">
+                                View All
+                            </a>
+                        </div>
+
+                        <div class="section-card-body">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Type</th>
+                                        <th>Registered</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="recentUserTable">
+                                    <tr>
+                                        <td colspan="3" class="empty-area">
+                                            Loading users...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-xl-6">
+                    <article class="section-card h-100">
+                        <div class="section-card-header d-flex align-items-center justify-content-between gap-3">
+                            <div>
+                                <h2 class="h5 mb-1">Recent Documents</h2>
+                                <p class="small-note mb-0">
+                                    Latest uploaded tender documents.
+                                </p>
+                            </div>
+
+                            <a href="admin-documents.html" class="btn btn-sm btn-outline-eztends">
+                                View All
+                            </a>
+                        </div>
+
+                        <div class="section-card-body">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Document</th>
+                                        <th>Uploaded By</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="recentDocumentTable">
+                                    <tr>
+                                        <td colspan="3" class="empty-area">
+                                            Loading documents...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/admin-dashboard.js"></script>
+</body>
+</html>

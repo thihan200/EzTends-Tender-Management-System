@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Users - EzTends</title>
+
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .page-header {
+            padding: 52px 0;
+            color: #ffffff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .page-header h1 {
+            font-weight: 800;
+        }
+
+        .page-content-area {
+            margin-top: -28px;
+            padding-bottom: 70px;
+        }
+
+        .summary-card,
+        .filter-card,
+        .table-card {
+            background: #ffffff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 15px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .summary-card {
+            height: 100%;
+            padding: 22px;
+        }
+
+        .summary-card p {
+            margin-bottom: 5px;
+            color: var(--eztends-muted);
+            font-weight: 700;
+        }
+
+        .summary-card h2 {
+            margin: 0;
+            color: var(--eztends-dark);
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+
+        .filter-card {
+            padding: 20px;
+        }
+
+        .table-card {
+            overflow: hidden;
+        }
+
+        .table-card-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .table-card-body {
+            overflow-x: auto;
+        }
+
+        .table {
+            min-width: 980px;
+            margin-bottom: 0;
+        }
+
+        .table th {
+            padding: 15px;
+            color: var(--eztends-dark);
+            background: #f7faf9;
+            border-bottom: 1px solid var(--eztends-border);
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .user-name {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .user-email {
+            color: var(--eztends-muted);
+            font-size: 0.85rem;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .type-admin {
+            color: #6f42c1;
+            background: #f1eafd;
+        }
+
+        .type-supplier {
+            color: #087f5b;
+            background: #dff5eb;
+        }
+
+        .type-authority {
+            color: #1553a0;
+            background: #e7f0ff;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .empty-row td,
+        .loading-row td {
+            padding: 55px 20px;
+            text-align: center;
+        }
+
+        .loading-row td {
+            color: var(--eztends-muted);
+        }
+
+        .detail-row {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .detail-row:last-child {
+            border-bottom: 0;
+        }
+
+        .detail-label {
+            display: block;
+            color: var(--eztends-muted);
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .detail-value {
+            display: block;
+            margin-top: 3px;
+            color: var(--eztends-dark);
+            font-weight: 700;
+            word-break: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="page-header">
+            <div class="container">
+                <p class="mb-2">System Administration</p>
+                <h1>User Management</h1>
+                <p class="mb-0">
+                    View and manage registered EzTends user accounts.
+                </p>
+            </div>
+        </section>
+
+        <section class="container page-content-area">
+            <div id="pageMessage"></div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Total Users</p>
+                        <h2 id="totalUserCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Suppliers</p>
+                        <h2 id="supplierCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Authorities</p>
+                        <h2 id="authorityCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="summary-card">
+                        <p>Administrators</p>
+                        <h2 id="adminCount">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-card mb-4">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label for="searchInput" class="form-label">
+                            Search Users
+                        </label>
+
+                        <input
+                            type="search"
+                            class="form-control"
+                            id="searchInput"
+                            placeholder="Search by name or email"
+                        >
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="typeFilter" class="form-label">
+                            Account Type
+                        </label>
+
+                        <select class="form-select" id="typeFilter">
+                            <option value="ALL">All Types</option>
+                            <option value="SUPPLIER">Supplier</option>
+                            <option value="TENDERING_AUTHORITY">
+                                Tendering Authority
+                            </option>
+                            <option value="ADMIN">Administrator</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 d-grid">
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary"
+                            id="clearFiltersButton"
+                        >
+                            Clear Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <article class="table-card">
+                <div class="table-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div>
+                        <h2 class="h4 mb-1">Registered Users</h2>
+                        <p class="text-muted mb-0" id="resultCount">
+                            Loading users...
+                        </p>
+                    </div>
+
+                    <a
+                        href="admin-dashboard.html"
+                        class="btn btn-outline-eztends"
+                    >
+                        Back to Dashboard
+                    </a>
+                </div>
+
+                <div class="table-card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Account Type</th>
+                                <th>Organization / Company</th>
+                                <th>Account Status</th>
+                                <th>Registered Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="userTableBody">
+                            <tr class="loading-row">
+                                <td colspan="6">
+                                    <div
+                                        class="spinner-border text-success mb-3"
+                                        role="status"
+                                    >
+                                        <span class="visually-hidden">
+                                            Loading...
+                                        </span>
+                                    </div>
+
+                                    <p class="mb-0">
+                                        Loading registered users...
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <div class="modal fade" id="userDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5">User Details</h2>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+                </div>
+
+                <div class="modal-body" id="userDetailsBody"></div>
+
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5">Edit User</h2>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+                </div>
+
+                <form id="editUserForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="editUserId">
+
+                        <div class="mb-3">
+                            <label for="editUserName" class="form-label">
+                                Name
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="editUserName"
+                                required
+                            >
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editUserEmail" class="form-label">
+                                Email
+                            </label>
+
+                            <input
+                                type="email"
+                                class="form-control"
+                                id="editUserEmail"
+                                required
+                            >
+                        </div>
+
+                        <div id="supplierEditFields" class="d-none">
+                            <div class="mb-3">
+                                <label
+                                    for="editCompanyName"
+                                    class="form-label"
+                                >
+                                    Company Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="editCompanyName"
+                                >
+                            </div>
+
+                            <div class="mb-3">
+                                <label
+                                    for="editBusinessRegNo"
+                                    class="form-label"
+                                >
+                                    Business Registration No
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="editBusinessRegNo"
+                                >
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editTaxId" class="form-label">
+                                    Tax ID
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="editTaxId"
+                                >
+                            </div>
+                        </div>
+
+                        <div id="authorityEditFields" class="d-none">
+                            <div class="mb-3">
+                                <label
+                                    for="editOrganizationName"
+                                    class="form-label"
+                                >
+                                    Organization Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="editOrganizationName"
+                                >
+                            </div>
+
+                            <div class="mb-3">
+                                <label
+                                    for="editRegistrationNo"
+                                    class="form-label"
+                                >
+                                    Registration Number
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="editRegistrationNo"
+                                >
+                            </div>
+
+                            <div class="mb-3">
+                                <label
+                                    for="editAddress"
+                                    class="form-label"
+                                >
+                                    Address
+                                </label>
+
+                                <textarea
+                                    class="form-control"
+                                    id="editAddress"
+                                    rows="3"
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn btn-eztends"
+                            id="saveUserButton"
+                        >
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Account Status Modal -->
+    <div class="modal fade" id="statusUserModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h2
+                        class="modal-title h5"
+                        id="statusModalTitle"
+                    >
+                        Change Account Status
+                    </h2>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+                </div>
+
+                <div class="modal-body">
+                    <p id="statusConfirmMessage"></p>
+
+                    <input
+                        type="hidden"
+                        id="statusUserId"
+                    >
+
+                    <input
+                        type="hidden"
+                        id="newAccountStatus"
+                    >
+
+                    <div class="mt-3">
+                        <label
+                            for="statusAdminPassword"
+                            class="form-label"
+                        >
+                            Enter Your Admin Password
+                        </label>
+
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="statusAdminPassword"
+                            autocomplete="current-password"
+                            placeholder="Admin password"
+                        >
+
+                        <div
+                            class="invalid-feedback"
+                            id="statusAdminPasswordError"
+                        ></div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-eztends"
+                        id="confirmStatusButton"
+                    >
+                        Confirm
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/admin-users.js"></script>
+</body>
+</html>

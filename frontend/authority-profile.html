@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authority Profile - EzTends</title>
+
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .profile-header {
+            padding: 52px 0;
+            color: #fff;
+            background: linear-gradient(135deg, #056044, #087f5b);
+        }
+
+        .profile-header h1 { font-weight: 800; }
+
+        .profile-content {
+            margin-top: 28px;
+            padding-bottom: 70px;
+        }
+
+        .profile-card {
+            background: #fff;
+            border: 1px solid var(--eztends-border);
+            border-radius: 16px;
+            box-shadow: var(--eztends-shadow);
+        }
+
+        .profile-card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .profile-card-body { padding: 24px; }
+
+        .profile-summary {
+            padding: 28px;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 110px;
+            height: 110px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            color: #fff;
+            background: var(--eztends-primary);
+            border-radius: 50%;
+            font-size: 2.4rem;
+            font-weight: 800;
+        }
+
+        .profile-summary h2,
+        .profile-title {
+            color: var(--eztends-dark);
+            font-weight: 800;
+        }
+
+        .profile-summary p { color: var(--eztends-muted); }
+
+        .profile-info {
+            margin-top: 22px;
+            text-align: left;
+        }
+
+        .profile-info-row {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--eztends-border);
+        }
+
+        .profile-info-row:last-child { border-bottom: 0; }
+
+        .profile-info-label {
+            display: block;
+            color: var(--eztends-muted);
+            font-size: .82rem;
+            font-weight: 700;
+        }
+
+        .profile-info-value {
+            display: block;
+            margin-top: 3px;
+            color: var(--eztends-dark);
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .password-wrapper { position: relative; }
+        .password-input { padding-right: 48px; }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            width: 28px;
+            height: 28px;
+            padding: 2px;
+            background: transparent;
+            border: 0;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .password-toggle img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            opacity: .72;
+        }
+
+        .password-input.is-valid,
+        .password-input.is-invalid {
+            padding-right: 50px !important;
+            background-image: none !important;
+        }
+
+        .password-rules p {
+            margin-bottom: 4px;
+            color: var(--eztends-muted);
+            font-size: .8rem;
+        }
+
+        .password-rules p::before {
+            content: "•";
+            margin-right: 7px;
+        }
+
+        .password-rules .rule-valid { color: #087f5b; }
+        .password-rules .rule-valid::before { content: "✓"; }
+        .password-rules .rule-invalid { color: #c92a2a; }
+        .password-rules .rule-invalid::before { content: "✕"; }
+
+        .loading-area {
+            padding: 70px 20px;
+            color: var(--eztends-muted);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="siteNavbar"></div>
+
+    <main class="page-content">
+        <section class="profile-header">
+            <div class="container">
+                <p class="mb-2">Tendering Authority Account</p>
+                <h1>My Profile</h1>
+                <p class="mb-0">View and update personal and organization information.</p>
+            </div>
+        </section>
+
+        <section class="container profile-content">
+            <div id="pageMessage"></div>
+
+            <div id="loadingArea" class="profile-card loading-area">
+                <div class="spinner-border text-success mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mb-0">Loading profile...</p>
+            </div>
+
+            <div id="profileContent" class="d-none">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <article class="profile-card profile-summary">
+                            <div class="profile-avatar" id="profileAvatar">A</div>
+                            <h2 class="h4 mb-1" id="profileName">Tendering Authority</h2>
+                            <p class="mb-1" id="profileOrganization"></p>
+                            <p class="mb-0" id="profileEmail"></p>
+
+                            <div class="profile-info">
+                                <div class="profile-info-row">
+                                    <span class="profile-info-label">Account Type</span>
+                                    <span class="profile-info-value">Tendering Authority</span>
+                                </div>
+
+                                <div class="profile-info-row">
+                                    <span class="profile-info-label">Registration Number</span>
+                                    <span class="profile-info-value" id="summaryRegistrationNo">-</span>
+                                </div>
+
+                                <div class="profile-info-row">
+                                    <span class="profile-info-label">Address</span>
+                                    <span class="profile-info-value" id="summaryAddress">-</span>
+                                </div>
+                            </div>
+
+                            <a href="authority-dashboard.html" class="btn btn-outline-eztends w-100 mt-4">
+                                Back to Dashboard
+                            </a>
+                        </article>
+                    </div>
+
+                    <div class="col-lg-8">
+                        <article class="profile-card mb-4">
+                            <div class="profile-card-header">
+                                <h2 class="profile-title h5 mb-0">Profile Details</h2>
+                            </div>
+
+                            <div class="profile-card-body">
+                                <form id="profileForm" novalidate>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="name" class="form-label">Contact Name</label>
+                                            <input type="text" class="form-control" id="name">
+                                            <div class="invalid-feedback" id="nameError"></div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label">Email Address</label>
+                                            <input type="email" class="form-control" id="email">
+                                            <div class="invalid-feedback" id="emailError"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="organization_name" class="form-label">Organization Name</label>
+                                        <input type="text" class="form-control" id="organization_name">
+                                        <div class="invalid-feedback" id="organizationNameError"></div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="registration_no" class="form-label">Registration Number</label>
+                                        <input type="text" class="form-control" id="registration_no">
+                                        <div class="invalid-feedback" id="registrationNoError"></div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="address" class="form-label">Organization Address</label>
+                                        <textarea class="form-control" id="address" rows="4"></textarea>
+                                        <div class="invalid-feedback" id="addressError"></div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-eztends" id="saveProfileButton">
+                                        Save Profile
+                                    </button>
+                                </form>
+                            </div>
+                        </article>
+
+                        <article class="profile-card">
+                            <div class="profile-card-header">
+                                <h2 class="profile-title h5 mb-0">Change Password</h2>
+                            </div>
+
+                            <div class="profile-card-body">
+                                <form id="passwordForm" novalidate>
+                                    <div class="mb-3">
+                                        <label for="currentPassword" class="form-label">Current Password</label>
+                                        <div class="password-wrapper">
+                                            <input type="password" class="form-control password-input" id="currentPassword">
+                                            <button type="button" class="password-toggle" data-target="currentPassword" data-eye="currentPasswordEye">
+                                                <img src="assets/images/eye-open.png" id="currentPasswordEye" alt="Show password">
+                                            </button>
+                                        </div>
+                                        <div class="invalid-feedback" id="currentPasswordError"></div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="newPassword" class="form-label">New Password</label>
+                                            <div class="password-wrapper">
+                                                <input type="password" class="form-control password-input" id="newPassword">
+                                                <button type="button" class="password-toggle" data-target="newPassword" data-eye="newPasswordEye">
+                                                    <img src="assets/images/eye-open.png" id="newPasswordEye" alt="Show password">
+                                                </button>
+                                            </div>
+                                            <div class="invalid-feedback" id="newPasswordError"></div>
+
+                                            <div class="password-rules mt-2">
+                                                <p id="ruleLength">At least 8 characters</p>
+                                                <p id="ruleUppercase">At least one uppercase letter</p>
+                                                <p id="ruleNumber">At least one number</p>
+                                                <p id="ruleSymbol">At least one symbol</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                            <div class="password-wrapper">
+                                                <input type="password" class="form-control password-input" id="confirmPassword">
+                                                <button type="button" class="password-toggle" data-target="confirmPassword" data-eye="confirmPasswordEye">
+                                                    <img src="assets/images/eye-open.png" id="confirmPasswordEye" alt="Show password">
+                                                </button>
+                                            </div>
+                                            <div class="invalid-feedback" id="confirmPasswordError"></div>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-eztends" id="changePasswordButton">
+                                        Change Password
+                                    </button>
+                                </form>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/authority-profile.js"></script>
+</body>
+</html>
